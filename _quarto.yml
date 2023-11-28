@@ -6,11 +6,11 @@ execute:
   echo: true
 
 book:
-  title: "YOUR PROJECT TITLE"
+  title: "Death Rate and Causes Analysis"
   author:
-    - AUTHOR1 (UNI1)
-    - AUTHOR2 (UNI2)
-  repo-url: https://github.com/YOUR_GITHUB_ACCOUNT/REPO_NAME
+    - Bingyun Jiang (bj2494)
+    - Chumei Wei (cw3543)
+  repo-url: https://github.com/AmeliaJiang129/deathrate
   date: today
   page-footer:
     right: |
