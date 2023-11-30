@@ -1,6 +1,6 @@
 ---
 editor: Bingyun Jiang, Chumei Wei
-    wrap: sentence
+wrap: sentence
 ---
 
 # Introduction
