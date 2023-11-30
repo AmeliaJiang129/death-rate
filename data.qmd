@@ -86,20 +86,24 @@ By employing EDA and simple statistical tests, this research aims to offer a com
 
 ## Missing values analysis
 
+```{r}
+library(readxl)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+```
+
 ### Data Source 1:
 
-[To be filled.]{.underline}
+```{r}
+
+```
 
 ### Data Source 2: GHE: Leading causes of death
 
 由于
 
 ```{r}
-library(readxl)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-
 df2 <- read_excel("ghecode2019.xlsx", sheet = "Summary",col_names = TRUE)
 
 df_long <- pivot_longer(df2,cols = Global:WPR, names_to = "region", values_to = "death_num")
