@@ -1,1 +1,31 @@
+---
+editor: Bingyun Jiang, Chumei Wei
+  markdown: 
+    wrap: sentence
+---
+
 # Introduction
+
+Well-being of people is the pursuit of all governments and non-profit organizations, so in the past decades, we have experienced a huge improvement in living standards. While the death rate and life expectancy are two of the most important measures of well-being, we are interested in exploring how societal and economic development have affected death rates and life expectancy at birth over time. Using Global Health Estimates (GHE) life tables released by the World Health Organization (WHO), we want to explore the trend of death rate and life expectancy globally, compare and contrast between regions over the world, and also look at the variations from age, sex and age groups.
+
+Building upon the general trend of death rate, we are interested in diving in to explore the breakdown of death causes, which can reflect well being of people and society conditions. For example, disease can be a huge portion of all death cases in the past when we did not have an established health care system or effective disease prevention practices and treatments. Using GHE leading causes of death database, we want to understand the composition of death cases and variations across continents, countries, age groups, and genders.
+
+Intended Research Questions:
+
+-   How has the death rate and life expectancy changed over time, globally and regionally?
+
+-   Does death rate and life expectancy differ by sex?
+
+-   Do more developed regions have lower death rate, higher life expectancy and larger changes than undeveloped regions?
+
+-   Do more developed regions have a more left skewed distribution of death rate on age?
+
+-   What causes death globally and regionally?
+
+-   Does the composition of causes of death change over time?
+
+-   Are there any interaction effects between variables such as age and sex affect the causes of death?
+
+-   How do the causes of death differ and appear to be similar across regions, and is this associated with development level?
+
+Overall, we will answer trends of death rate, life expectancy, and the causes of death globally and regionally from multiple dimensions and perspectives.
