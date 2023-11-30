@@ -189,7 +189,7 @@ for (sheet_name in excel_sheets(file_path)) {
   df_2019 <- bind_rows(df_2019, current_sheet)
 }
 
-check if is na,两种可能，一种真的没有，一种是missing，先assume真的没有
+#check if is na,两种可能，一种真的没有，一种是missing，先assume真的没有
 ```
 
 \
