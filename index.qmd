@@ -1,6 +1,5 @@
 ---
 editor: Bingyun Jiang, Chumei Wei
-  markdown: 
     wrap: sentence
 ---
 
