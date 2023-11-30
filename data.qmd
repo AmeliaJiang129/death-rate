@@ -8,6 +8,8 @@ This dataset is collected and published by the World Health Organization. WHO co
 
 The dataset can be downloaded as .cvs file and excel file. We chose the .cvs format for easier importing. It has 9310 rows and 34 columns. Among all Indicators in column 2, we are only interested in life expectancy and death rate, so we will only keep rows of these two indicators (ex - expectation of life at age x and nMx: age-specific death rate between ages x and x+n) and drop others. Looking at the columns, there are many duplicated items, such as value and the corresponding value code, and some redundant items such as variable type. Hence, we will only keep the following informative columns: Indicator, Location, Period (year), Dim1 (sex), Dim2 (age group), FactValueNumeric for analysis purpose. After the data cleaning, our dataset has 2660 rows and 6 rows. 
 
+Indicator contains two values: ex - expectation of life at age x and nMx: age-specific death rate between ages x and x+n, which are the indicators we are interested in analyzing. Location contains Global, Africa, Americans, Eastern Mediterranean, Europe, South-East Asia, and Western Pacific. Period stores year of the observation. Dim1 is sex, which contains Male and Female. Dim2 represent age groups, which has value from \<1 year to 85+ years, with the interval of 5. FactValueNumeric is the value for indicators, which is in numeric format.
+
 ### Data Source 2: GHE: Leading causes of death
 
 WHO's Global Health Estimates (GHE) provide the latest available data on [causes of death](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-leading-causes-of-death) globally, by region and country, and by age, sex and income group. They provide key insights on mortality and morbidity trends to support informed decision-making on health policy and resource allocation.
@@ -24,19 +26,19 @@ Please note that the divisions of age, time, gender and region, which are catego
 
 ### Data Source 1:
 
-How has the death rate and life expectancy changed over time, globally and regionally?
+***How has the death rate and life expectancy changed over time, globally and regionally?***
 
 -   For the global overall trend, we will aggregate the data for each year and make a bar chart showing the death rate and life expectancy at birth from 2000 to 2019.
 
-Does death rate and life expectancy differ by sex?
+***Does death rate and life expectancy differ by sex?***
 
 -   We will aggregate the data for each year by sex and make a side-by-side barchart to compare indicators for male and female, exploring whether there is a gap and whether the gap changes over time.
 
-Do more developed regions have lower death rate, higher life expectancy and larger changes than undeveloped regions?
+***Do more developed regions have lower death rate, higher life expectancy and larger changes than undeveloped regions?***
 
 -   We will aggregate the data for each region and make side-by-side bar charts to compare each region.
 
-Do more developed regions have a more left skewed distribution of death rate on age?
+***Do more developed regions have a more left skewed distribution of death rate on age?***
 
 -   First we aggregate the data for each region, and make a histogram of death rate on age groups. 
 
@@ -96,7 +98,62 @@ library(ggplot2)
 ### Data Source 1:
 
 ```{r}
+data <- read.csv('dataset1.csv')
 
+#Dimension
+print("Dimension of data")
+print(dim(data))
+
+#Check Missing Value
+missing <- colSums(is.na(data))
+missing_df <- data.frame(
+  Column = names(missing),
+  Missing_Values = missing
+)
+missing_df
+```
+
+Looking at the raw data, we can see that columns associated with Dim3, DataSourceDimValueCode, DataSource, FactValueNumericPrefix, FactValueUoM, FactValueNumericLowPrefix, FactValueNumericLow, FactValueNumericHighPrefix, FactValueNumericHigh are completely missing. This is because we only have two dimension categorical variables: sex and age group, and FactValueNumeric bears sufficient information for the indicator value. Therefore, we will remove those completely missing columns and one of the duplicated columns such as value/ValueCode and location/LocationCode.
+
+|     |
+|:----|
+|     |
+
+```{r}
+# Data Cleaning
+data <- data[data$Indicator %in% c('nMx - age-specific death rate between ages x and x+n','ex - expectation of life at age x'), ]
+data <- data[ , c('Indicator', 'Location', 'Period', 'Dim1', 'Dim2', 'FactValueNumeric')]
+
+# Dimension
+print("Dimension of data")
+print(dim(data))
+
+# Check missing values
+missing_values <- sum(is.na(data))
+print(paste("Number of missing values: ", missing_values))
+```
+
+After data cleaning, there is no missing value in this dataset, and we can further show this in an pie chart.
+
+```{r}
+# Plot to show 
+missing_dummy <- as.numeric(!is.na(data))
+
+# Calculate the percentage of present and missing values
+present_perc <- sum(missing_dummy) / length(missing_dummy) * 100
+missing_perc <- 100 - present_perc
+
+# Create a pie chart
+pie_data <- c(present_perc, missing_perc)
+pie_labels <- c("Present", "Missing")
+label_perc <- sprintf("%1.1f%%", pie_data)
+labels_combined <- paste(pie_labels, "\n", label_perc)
+
+# Create a pie chart with labels
+pie(pie_data, labels = labels_combined,
+    col = c("#00AFBB", "#E7B800"),
+    main = "Data Completeness",
+    cex.main = 0.8)
 ```
 
 ### Data Source 2: GHE: Leading causes of death
