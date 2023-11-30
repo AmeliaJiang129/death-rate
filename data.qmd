@@ -33,6 +33,7 @@ Please note that the divisions of age, time, gender and region, which are catego
 ***Does death rate and life expectancy differ by sex?***
 
 -   We will aggregate the data for each year by sex and make a side-by-side barchart to compare indicators for male and female, exploring whether there is a gap and whether the gap changes over time.
+-   We can also create mosaic plots to explore the interactions effects between age, sex, and target indicators.
 
 ***Do more developed regions have lower death rate, higher life expectancy and larger changes than undeveloped regions?***
 
@@ -40,7 +41,8 @@ Please note that the divisions of age, time, gender and region, which are catego
 
 ***Do more developed regions have a more left skewed distribution of death rate on age?***
 
--   First we aggregate the data for each region, and make a histogram of death rate on age groups. 
+-   First we aggregate the data for each region, and make a histogram of death rate on age groups.
+-   Since more developed regions will have more developed health care system, we expect a lower infant mortality and higher life expectancy at birth. So the death rate will be low when age is young, and higher when age is large.
 
 ### Data Source 2: GHE: Leading causes of death
 
