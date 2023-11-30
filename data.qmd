@@ -70,6 +70,8 @@ By employing EDA and simple statistical tests, this research aims to offer a com
 
 ### Data Source 2: GHE: Leading causes of death
 
+the death causes in our dataset has different levels. For
+
 ```{r}
 library(readxl)
 library(tidyr)
@@ -87,13 +89,14 @@ filtered_data <- filtered_data %>%
   mutate(if_zero = ifelse(death_num == 0, 'zero', 'non-zero'))
 
 ggplot(filtered_data, aes(x = if_zero)) +
-  geom_bar(stat = "count") +
+  geom_bar(stat = "count",fill='cornflowerblue') +
   labs(
     title = "Zero and Non-Zero Proportions on Different Levels of Death Cause Category",
     x = "If Zero",
     y = "Count"
   )+
-  facet_wrap(~level,scales = "free_y")
+  facet_wrap(~level,scales = "free_y")+
+  theme_minimal()
 ```
 
 ```{r}
@@ -103,6 +106,29 @@ for (sheet_name in excel_sheets(file_path)) {
   current_sheet <- read_excel(file_path, sheet = sheet_name)
   df_2019 <- bind_rows(df_2019, current_sheet)
 }
+
+df_2019_long <- pivot_longer(df_2019,cols = '0-28 days':'70+ years', names_to = "age_group", values_to = "death_num")
+
+df_2019_long$age_group <- factor(df_2019_long$age_group, levels = c("0-28 days", "1-59 months", "5-14 years", "15-29 years", "30-49 years", "50-59 years", "60-69 years","70+ years"))
+
+ggplot(df_2019_long, aes(x = region, y = death_num, fill = age_group)) +
+  geom_bar(stat = "identity",color=alpha('white',-10)) +
+  labs(title = "Death Count in Different Age and Regions for 2019",
+       x = "Region",
+       y = "Death Count",
+       fill = "Age Group")+
+  theme_minimal()
+
+ggplot(df_2019_long, aes(x = region, y = death_num, fill = age_group)) +
+  geom_bar(stat = "identity",position = "dodge",color=alpha('white',-10)) +
+  facet_grid(. ~ sex) +
+  labs(title = "Death Count in Different Age and Regions for 2019",
+       x = "Region",
+       y = "Death Count",
+       fill = "Age Group")+
+  scale_y_log10() +
+  theme_minimal()+
+  coord_flip()
 
 # check if is na,两种可能，一种真的没有，一种是missing，先assume真的没有
 ```
