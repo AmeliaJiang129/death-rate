@@ -46,45 +46,23 @@ Please note that the divisions of age, time, gender and region, which are catego
 
 ### Data Source 2: GHE: Leading causes of death
 
--   ***What causes death globally and regionally?***
+Our research on data source 2 involves the following parts:
 
--   ***Does the composition of causes of death change over time?***
+#### **a. Temporal Analysis**
 
--   ***Are there any interaction effects between variables such as age and sex affect the causes of death?***
+-   For this part, we will examine temporal trends in causes of death over the past decade and identify regions or demographic groups experiencing significant changes in mortality rates.
 
--   ***How do the causes of death differ and appear to be similar across regions, and is this associated with development level?***
+-   **Questions to be answered:** Does the composition of causes of death change over time?
 
-Our research plan involves the following steps:
+-   **Methods to be implemented:** line chart, Cleveland dot plot.
 
-#### a. Data Aggregation and Preprocessing
+#### b. **Regional, Age and Gender Disparities**
 
--   Collect and preprocess the most recent data from the WHO's GHE database, ensuring data quality and consistency.
+-   Analyze causes of death by continent, age groups and gender groups, emphasizing descriptive statistics to highlight regional variations. We will explore the influence of socio-economic factors on mortality rates and highlight any discernible patterns or disparities in mortality rates.
 
-#### b. **Exploratory Data Analysis (EDA)**
+-   **Questions to be answered:** What causes death globally and regionally?How do the causes of death differ and appear to be similar across regions, and is this associated with development level? Are there any interaction effects between variables such as age and sex affect the causes of death?
 
--   Conduct a thorough EDA to visualize and summarize the distribution of causes of death globally.
-
--   Identify outliers, missing values, and any notable trends in the dataset.
-
-#### **c. Temporal Analysis**
-
--   Examine temporal trends in causes of death over the past decade and identify regions or demographic groups experiencing significant changes in mortality rates.
-
--   Methods to be implemented: stacked bar chart for different categories, Cleveland dot plot.
-
-#### d. **Regional Disparities**
-
--   Analyze causes of death by continent, emphasizing descriptive statistics to highlight regional variations. Explore the influence of socio-economic factors on mortality rates.
-
--   Methods to be implemented: PCA analysis with biplot, faceted geographic graphs.
-
-#### e. **Age and Gender Disparities**
-
--   Utilize EDA techniques to explore causes of death by age group and gender, emphasizing visualizations for clarity.
-
--   Highlight any discernible patterns or disparities in mortality rates.
-
--   Methods to be implemented: stacked bar chart
+-   **Methods to be implemented:** stacked bar chart for different categories, faceted geographic graphs, PCA analysis with biplot, Interaction effect analysis with Mosaic plot.
 
 By employing EDA and simple statistical tests, this research aims to offer a comprehensible and insightful analysis of global health disparities. The findings from this study can inform targeted public health strategies and contribute to ongoing efforts to improve health outcomes on a global scale.
 
