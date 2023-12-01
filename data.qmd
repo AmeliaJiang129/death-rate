@@ -138,8 +138,6 @@ pie(pie_data, labels = labels_combined,
 
 ### Data Source 2: GHE: Leading causes of death
 
-由于
-
 ```{r}
 df2 <- read_excel("ghecode2019.xlsx", sheet = "Summary",col_names = TRUE)
 
