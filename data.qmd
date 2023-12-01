@@ -204,7 +204,7 @@ In the first graph above, we plotted grouped bars according to different regions
 ggplot(df_2019_long, aes(x = region, y = death_num, fill = age_group)) +
   geom_bar(stat = "identity",position = "dodge") +
   facet_grid(. ~ sex) +
-  labs(title = "Death Count in Different Age and Regions for 2019",
+  labs(title = "Death Count in Different Age, Sex and Regions for 2019",
        x = "Region",
        y = "Death Count",
        fill = "Age Group")+
