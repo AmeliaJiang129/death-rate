@@ -70,7 +70,13 @@ By employing EDA and simple statistical tests, this research aims to offer a com
 
 ### Data Source 2: GHE: Leading causes of death
 
-the death causes in our dataset has different levels. For
+There are four levels of variables on cause of death in our dataset. For example, the first level of causes includes three: (1) **Communicable, maternal, perinatal and nutritional conditions**, (2) **Noncommunicable disease**s, and (3) **Injuries**. The first-level causes can be expanded into multiple secondary causes. For example, **Communicable, maternal, perinatal and nutritional conditions** includes **Infectious and parasitic diseases**, **Respiratory Infectious**, and so on. By analogy, secondary causes include multiple 3rd-level causes, and 3rd-level causes include 4th-level causes, which are likely to be very rare fatal diseases.
+
+Based on this categorization, it can be assumed that the number of deaths due to the 1st-level causes is unlikely to be zero, as this is a very broad cause of death, with many categories underneath it. However, for a given 4th-level cause, there are likely to be multiple values of 0. For example, the number of deaths due to Trachoma is zero over the time period 2000 to 2019, and even if the range extends to global.
+
+Subject to the availability of data, when the number of deaths under a particular category is zero, it may be due to the fact that the official data do not capture this category of deaths, or it may be that there are indeed no deaths due to such causes. Here, we assume that our data sources are accurate, i.e., we believe the latter, and that there are indeed no deceased under this category. In this case, at this point, if the death_count is zero, it does not mean that the data is missing. Nevertheless, to account for this pattern in our dataset, we still counted the number of counts that were zero. That is, based on our assumptions, we converted the missing value analysis to an analysis of counts within subgroups that are zero.
+
+We plot the trend of a gradually increasing proportion of zeros as we move deeper into the level hierarchy in the figure below:
 
 ```{r}
 library(readxl)
@@ -99,6 +105,8 @@ ggplot(filtered_data, aes(x = if_zero)) +
   theme_minimal()
 ```
 
+Note that in this figure, although we used stat = "count" in the bar plot, we adjusted the scale of the y-axis to be free, to clearly compare zero and non-zero proportions. And it's clear that as our we move deeper into the level hierarchy, the proportion of non-zeros is showing an increasing trend.
+
 ```{r}
 file_path <- "ghecode2019_1.xlsx"
 df_2019 <- data.frame()
@@ -112,15 +120,21 @@ df_2019_long <- pivot_longer(df_2019,cols = '0-28 days':'70+ years', names_to = 
 df_2019_long$age_group <- factor(df_2019_long$age_group, levels = c("0-28 days", "1-59 months", "5-14 years", "15-29 years", "30-49 years", "50-59 years", "60-69 years","70+ years"))
 
 ggplot(df_2019_long, aes(x = region, y = death_num, fill = age_group)) +
-  geom_bar(stat = "identity",color=alpha('white',-10)) +
+  geom_bar(stat = "identity",) +
   labs(title = "Death Count in Different Age and Regions for 2019",
        x = "Region",
        y = "Death Count",
        fill = "Age Group")+
   theme_minimal()
 
+
+```
+
+In the first graph above, we plotted grouped bars according to different regions. And the bars are stacked by counts in different age groups. Notice that although in some subgroups, the counts within the group are very small, they are not zero.
+
+```{r}
 ggplot(df_2019_long, aes(x = region, y = death_num, fill = age_group)) +
-  geom_bar(stat = "identity",position = "dodge",color=alpha('white',-10)) +
+  geom_bar(stat = "identity",position = "dodge") +
   facet_grid(. ~ sex) +
   labs(title = "Death Count in Different Age and Regions for 2019",
        x = "Region",
@@ -129,8 +143,8 @@ ggplot(df_2019_long, aes(x = region, y = death_num, fill = age_group)) +
   scale_y_log10() +
   theme_minimal()+
   coord_flip()
-
-# check if is na,两种可能，一种真的没有，一种是missing，先assume真的没有
 ```
 
-\
+In the second graph above, we plot the statistics of deaths in subgroups that distinguish between gender and age in each region, using 2019 data as an example. Notice that at this level of disaggregation, there are still no subgroups with zero counts.
+
+As we can tell from the above graphs, there are indeed some very fine-faceted subgroups that have zero counts of death. For example, if we wanted to look at the number of females under the age of 5 who died in 2019 in Europe because of some rare 4th-level cause, it is possible that this value to be zero. However, at a more macro level of aggregation, the number of death counts within groups is not zero. This suggests that the data source we use is sufficient to allow us to identify some interesting trends, and in turn to draw some solid conclusions, on groups that are not faceted as that fine.
