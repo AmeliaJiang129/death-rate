@@ -64,9 +64,73 @@ By employing EDA and simple statistical tests, this research aims to offer a com
 
 ## Missing values analysis
 
-### Data Source 1:
+```{r}
+library(readxl)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+```
 
-[To be filled.]{.underline}
+### Data Source 1: GHE: Life tables
+
+```{r}
+data <- read.csv('dataset1.csv')
+
+#Dimension
+print("Dimension of data")
+print(dim(data))
+
+#Check Missing Value
+missing <- colSums(is.na(data))
+missing_df <- data.frame(
+  Column = names(missing),
+  Missing_Values = missing
+)
+missing_df
+```
+
+Looking at the raw data, we can see that columns associated with Dim3, DataSourceDimValueCode, DataSource, FactValueNumericPrefix, FactValueUoM, FactValueNumericLowPrefix, FactValueNumericLow, FactValueNumericHighPrefix, FactValueNumericHigh are completely missing. This is because we only have two dimension categorical variables: sex and age group, and FactValueNumeric bears sufficient information for the indicator value. Therefore, we will remove those completely missing columns and one of the duplicated columns such as value/ValueCode and location/LocationCode.
+
+|     |
+|:----|
+|     |
+
+```{r}
+# Data Cleaning
+data <- data[data$Indicator %in% c('nMx - age-specific death rate between ages x and x+n','ex - expectation of life at age x'), ]
+data <- data[ , c('Indicator', 'Location', 'Period', 'Dim1', 'Dim2', 'FactValueNumeric')]
+
+# Dimension
+print("Dimension of data")
+print(dim(data))
+
+# Check missing values
+missing_values <- sum(is.na(data))
+print(paste("Number of missing values: ", missing_values))
+```
+
+After data cleaning, there is no missing value in this dataset, and we can further show this in an pie chart.
+
+```{r}
+# Plot to show 
+missing_dummy <- as.numeric(!is.na(data))
+
+# Calculate the percentage of present and missing values
+present_perc <- sum(missing_dummy) / length(missing_dummy) * 100
+missing_perc <- 100 - present_perc
+
+# Create a pie chart
+pie_data <- c(present_perc, missing_perc)
+pie_labels <- c("Present", "Missing")
+label_perc <- sprintf("%1.1f%%", pie_data)
+labels_combined <- paste(pie_labels, "\n", label_perc)
+
+# Create a pie chart with labels
+pie(pie_data, labels = labels_combined,
+    col = c("#00AFBB", "#E7B800"),
+    main = "Data Completeness",
+    cex.main = 0.8)
+```
 
 ### Data Source 2: GHE: Leading causes of death
 
