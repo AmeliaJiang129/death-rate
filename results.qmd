@@ -1,5 +1,197 @@
 # Results
 
+## Data Source 1:
+
+```{r}
+library(ggplot2)
+library(ggridges)
+library(dbplyr)
+library(dplyr)
+library(forcats)
+library(scales)
+library(ggrepel)
+library(openintro)
+library(plotly)
+library(tidyverse)
+library(hexbin)
+library(RColorBrewer)
+```
+
+### General Trend of Death Rate and Life Expectancy Over Time
+
+First we will look at the general trend of death rate and life expectancy over time, globally and regionally, then compare between regions.
+
+```{r}
+# change column names
+colnames(data) <- c('Indicator', 'Location', 'Year', 'Sex', 'Age', 'Value')
+
+# shorten indicators names
+data <- data %>%
+  mutate(Indicator = ifelse(Indicator == 'ex - expectation of life at age x', 'life_exp_age',
+                            ifelse(Indicator == 'nMx - age-specific death rate between ages x and x+n', 'death_rate_age', Indicator)))
+```
+
+```{r}
+# Aggregate Death rate in each year
+death_rate_agg <- data %>%
+  filter(Indicator == 'death_rate_age') %>%
+  group_by(Year, Location) %>%
+  summarise(AverageDeathRate = mean(Value))
+
+# Order regions by increasing average death rate
+ordered_regions <- death_rate_agg %>%
+  group_by(Location) %>%
+  summarise(AvgDeathRate = mean(AverageDeathRate)) %>%
+  arrange(AvgDeathRate) %>%
+  pull(Location)
+
+# Bar chart for death rate of each region over years
+ggplot(death_rate_agg, aes(x = Year, y = AverageDeathRate, fill = reorder(Location, AverageDeathRate))) +
+  geom_bar(stat = 'identity', position = 'dodge') +
+  scale_fill_brewer(palette="Paired") + 
+  labs(title = "Death Rate of Each Region Over Years",
+       x = "Year",
+       y = "Average Death Rate",
+       fill = "Region") 
+```
+
+In 2000, death rate ranks from low to high as Americas (0.021), Europe, Western Pacific, Eastern Mediterranean, South-East Asia, and Africa (0.041), and the average difference between regions is 0.001. While in 2020, the rank from low to high becomes Americas (0.019), Europe, Western Pacific, South-East Asia, Eastern Mediterranean, and Africa (0.031). The gap between regions also becomes smaller, espacially Americas and Europe (almost the same).
+
+One noticeable thing is that South-East Asia's death rate drops greater than Eastern Mediterranean, and became the 4th rank since 2010. This also corresponds with the rapid economic and social development of South-East Asia in the past decades.
+
+Comparing the change in death rate, we observe that Africa has the greatest decrease in death rate about 0.01, while Americas has the smallest decrease in death rate about 0.002, which is 1/5 of Africa's death rate change.
+
+Globally, death rate presents a consistent decreasing trend from 2000 to 2020, and drops from 0.029 to 0.021 by 0.008. Americas, Europe, Western Pacific have death rates lower than the global level, while South-East Asia, Eastern Mediterranean, and Africa have death rates higher than the global level.
+
+```{r}
+# Aggregate life expectancy in each year
+life_exp_birth <- data %>%
+  filter(Indicator == 'life_exp_age' & Age == '<1 year') %>%
+  group_by(Year, Location) %>%
+  summarise(AvgLifeExpBirth = mean(Value))
+
+# Order in ascending order
+ordered_regions <- life_exp_birth %>%
+  group_by(Location) %>%
+  summarise(AvgLifeExpBirth = mean(AvgLifeExpBirth)) %>%
+  arrange(AvgLifeExpBirth) %>%
+  pull(Location)
+
+# Bar chart for life expectancy of each region over years
+ggplot(life_exp_birth, aes(x = Year, y = AvgLifeExpBirth, fill = reorder(Location, AvgLifeExpBirth))) +
+  geom_bar(stat = 'identity', position = 'dodge') +
+  scale_fill_brewer(palette="Paired") +
+  labs(title = "Death Rate of Each Region Over Years",
+       x = "Year",
+       y = "Average Life Expectancy at Birth",
+       fill = "Region")
+```
+
+Compared to death rate, differences in life expectancy across region is smaller. In 2000, the rank of life expectancy from low to high is Africa (52), South-East Asia, Eastern Mediterranean, Western Pacific, Europe, and Americas (72). While in 2020, the rank became Africa (63), Eastern Mediterranean, South-East Asia, Americas, Western Pacific, and Europe (79).
+
+Life expectancy of South-East Asia caght up and surpassed that of Eastern Mediterranean since 2005, while life expectancy of Americas fell behind Western Pacific and Europe since 2010. This can be explained by the rapid development of South-East Asia and problems such as obesity in Americas.
+
+Looking at change rates, Africa's life expectancy increase by 20 in the past 20 years, which is the biggest among all regions. Americas' life expectancy rises by 6. Eastern Mediterranean's life expectancy only rises by 2, which is the smallest change among all regions.
+
+Globally, life expectancy keeps rising over years, and rose from 66 to 72. Americas, Europe, Western Pacific have life expectancy higher than the global level, while South-East Asia, Eastern Mediterranean, and Africa have life expectancy lower than the global level.
+
+According to the 2 side-by-side bar charts above, we can observe a general decreasing death rate and increasing life expectancy from 2000 to 2020. The change of developed regions, such as Americas and Europe is smaller than developing regions such as Africa and South-East Asia. This shows that economic and social developments bring more improvements in people's well being to less-developed regions, especially Africa.
+
+### Effect of Sex on Death Rate and Life Expectancy
+
+Then we will look at whether death rate and life expectancy differ by sex globally and regionally.
+
+```{r}
+region_data <- data %>%
+  filter(Location != '(WHO) Global')
+
+global_data <- data %>%
+  filter(Location == '(WHO) Global')
+
+ggplot(global_data, aes(x = Year, y = Value, fill = Sex)) +
+  geom_bar(stat = 'identity', position = 'dodge') +
+  facet_wrap(~Indicator, scales = "free_y") +
+  scale_fill_brewer(palette="Set2") +
+  labs(title = "Comparison of Death Rate and Life Expectancy by Sex Over Years",
+       x = "Year",
+       y = "Value",
+       fill = "Sex")
+```
+
+Globally, we can observe that death rate of male is higher than that of female, and in turn, life expectancy of male is smaller than that of female. The differences of death rate and life expectancy between two genders remains generally constant, without significant variations over time. On average, male death rate is 0.004 higher than female, and male life expectancy is 4-5 lower than female.
+
+```{r}
+ggplot(region_data, aes(x = Year, y = Value, fill = Sex)) +
+  geom_bar(stat = 'identity', position = 'dodge') +
+  facet_grid(rows = vars(Indicator), cols = vars(Location), scales = "free_y") +
+  scale_fill_brewer(palette="Set2") +
+  labs(title = "Comparison of Death Rate and Life Expectancy by Sex and Region Over Years",
+       x = "Year",
+       y = "Value",
+       fill = "Sex") +
+  theme(
+    plot.title = element_text(size =12),
+    axis.title.x = element_text(size = 8),
+    axis.title.y = element_text(size = 8),
+    axis.text.x = element_text(angle = 90, size=6,hjust=1),
+    axis.text.y = element_text(size = 6),
+    legend.title = element_text(size = 6),
+    legend.text = element_text(size = 6))
+```
+
+When faceting by regions, we can observe some patterns here. Western Pacific has the greatest difference in death rate between male and female, and the big difference persists over time. Eastern Mediterranean has the smallest gap in death rate between male and female, and the gap gets smaller from 2000 to 2020. Looking at life expectancy, Europe has the biggest gap between genders, with the gap becomes smaller over time, and South-East Asia has the smallest gap.
+
+To sum up, male has higher death rate and lower life expectancy than women. The effect has the same direction in each region, but the magnitude is different. Also the effect does not appear to change significantly over time.
+
+### Death Rate Over Age Groups
+
+Further, we are interested in the distribution of death rate over age groups.
+
+```{r}
+# Order age groups
+age_order <- c("<1 year", "1-4 years", "5-9 years", "10-14 years", "15-19 years", 
+               "20-24 years", "25-29 years", "30-34 years", "35-39 years", 
+               "40-44 years", "45-49 years", "50-54 years", "55-59 years", 
+               "60-64 years", "65-69 years", "70-74 years", "75-79 years", 
+               "80-84 years", "85+ years")
+
+# Order in dataset
+death_rate_global$Age <- factor(death_rate_global$Age, levels = age_order)
+
+# Plot with the specified order
+ggplot(death_rate_global, aes(x = Age, y = Value)) +
+  geom_bar(stat = 'identity', position = 'dodge', color = 'blue', fill = "lightblue") +
+  labs(title = "Death Rate by Age Group",
+       x = "Age Group",
+       y = "Death Rate") +
+  theme(plot.title=element_text(hjust=0.5),
+        axis.text.x = element_text(angle = 90, size=8, hjust=1))
+```
+
+Looking at the global trend, death rate increases with age after 4-year-old. This is reasonable since infants are more vulnerable to disease, which results in a high death rate of 0.055. After the infant stage, death rate increases with age from 0.001 at 5-9 years to 0.21 at 85+ years. As human grow up, we have more interactions with the world, leading to higher risk of accidents; our cells get damaged by injury, stress, and DNA mutations, leading to higher risk of disease. Therefore, death rate rises continuously.
+
+```{r}
+death_rate_region <- region_data %>%
+  filter(Indicator == 'death_rate_age')
+
+death_rate_region$Age <- factor(death_rate_region$Age, levels = age_order)
+
+ggplot(death_rate_region, aes(x = Age, y = Value)) +
+  geom_bar(stat = 'identity', position = 'dodge', color = 'blue', fill = "lightblue") +
+  labs(title = "Death Rate by Age Group",
+       x = "Age Group",
+       y = "Death Rate") +
+  theme(plot.title=element_text(hjust=0.5),
+          axis.text.x = element_text(angle = 90, size=8,hjust=1))+
+  facet_wrap(~ Location)
+```
+
+When we facet by region, we observe different death rate patterns. First of all, infant mortality (death rate of \<1 year group) is high in Africa (0.11), South-East Asia (0.07), and Eastern Mediterranean (0.07), while infant mortality is low in Americas, Europe, and Western Pacific, which is around 0.025. Second, death rate of 85+ group of Americas and Europe (\<0.2) is lower than that of South-East Asia and Eastern Mediterranean (around 0.2), and death rate of 85+ group of Africa and Western Pacific is the higher, around 0.25.
+
+The difference in infant mortality can be explained by health care infrastructure and medical practices. In Africa, maternity care might be not established, and new-born babies also lack of medical care, leading to high death rate of the \<1 year group. While in developed regions, pregnant women and infants are more likely to receive proper health care, leading to lower death rate.
+
+Overall, death rate is closely related to the establishment of the health care system. So it is reasonable that death rate in developing regions is higher than that of developed regions.
+
 ## Data Source 2:
 
 ```{r,fig.height=5.5,fig.width=8}
