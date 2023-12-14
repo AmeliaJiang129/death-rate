@@ -22,6 +22,11 @@ library(RColorBrewer)
 First we will look at the general trend of death rate and life expectancy over time, globally and regionally, then compare between regions.
 
 ```{r}
+data <- read.csv('dataset1.csv')
+
+data <- data[data$Indicator %in% c('nMx - age-specific death rate between ages x and x+n','ex - expectation of life at age x'), ]
+data <- data[ , c('Indicator', 'Location', 'Period', 'Dim1', 'Dim2', 'FactValueNumeric')]
+
 # change column names
 colnames(data) <- c('Indicator', 'Location', 'Year', 'Sex', 'Age', 'Value')
 
@@ -413,3 +418,4 @@ ggplotly(pca_plot)
 
 
 ```
+
