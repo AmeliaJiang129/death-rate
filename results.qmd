@@ -1,1 +1,218 @@
 # Results
+
+## Data Source 2:
+
+```{r,fig.height=5.5,fig.width=8}
+library(readxl)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(dplyr)
+library(redav)
+library(plotly)
+library(vcd)
+library(colorspace)
+```
+
+```{r}
+# read in data
+file_path <- "ghecode2019_cleaned_2.xlsx"
+df_2 <- data.frame()
+for (sheet_name in excel_sheets(file_path)) {
+  current_sheet <- read_excel(file_path, sheet = sheet_name)
+  df_2 <- bind_rows(df_2, current_sheet)
+}
+df_2$cause[df_2$cause == 'Communicable, maternal, perinatal and nutritional conditions'] <- 'Communicable & Nutritional'
+df_2$cause[df_2$cause == 'Noncommunicable diseases'] <- 'Noncommunicable'
+
+df_2_long <- pivot_longer(df_2,cols = '0-28 days':'70+ years', names_to = "age_group", values_to = "death_num")
+
+df_2_long$age_group <- factor(df_2_long$age_group, levels = c("0-28 days", "1-59 months", "5-14 years", "15-29 years", "30-49 years", "50-59 years", "60-69 years","70+ years"))
+
+df_2_long$sex <-factor(df_2_long$sex, levels = c("Male","Female"))
+
+```
+Plot 1: Bar Chart- Temporal trend
+```{r,fig.height=5.5,fig.width=10}
+
+df_2_long_1<-df_2_long %>%
+  filter(level == 1)
+
+df_2_long_1$cause <-factor(df_2_long_1$cause, levels = c("Injuries","Communicable & Nutritional","Noncommunicable"))
+
+ggplot(df_2_long_1,aes(x = year, y = death_num, fill = cause)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Stacked Bar Chart of Death Num",
+       x = "Year",
+       y = "Death Num") +
+  theme_minimal()
+
+```
+Plot 2: Stacked Bar chart - temporal trend of different causes faceted on region
+```{r,fig.height=10,fig.width=10}
+
+df_2_long_1<-df_2_long %>%
+  filter(level == 1)
+df_2_long_1$year <-factor(df_2_long_1$year, levels = c("2019","2015", "2010","2000"))
+df_2_long_1$region <-factor(df_2_long_1$region, levels = c("Wpr","Sear","Eur",'Afr','Amr','Emr'))
+df_2_long_1$cause <-factor(df_2_long_1$cause, levels = c("Injuries","Communicable & Nutritional","Noncommunicable"))
+
+ggplot(df_2_long_1,aes(x = year, y = death_num, fill = cause)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Stacked Bar Chart of Death Num",
+       x = "Year",
+       y = "Death Num") +
+  facet_wrap(~region, ncol = 1)+
+  coord_flip() +
+  theme_minimal()
+
+```
+Plot 3: Stacked Bar chart - temporal trend of different causes faceted on sex
+```{r,fig.height=8,fig.width=8}
+
+df_2_long_1<-df_2_long %>%
+  filter(level == 1)
+df_2_long_1$year <-factor(df_2_long_1$year, levels = c("2019","2015", "2010","2000"))
+df_2_long_1$region <-factor(df_2_long_1$region, levels = c("Wpr","Sear","Eur",'Afr','Amr','Emr'))
+df_2_long_1$cause <-factor(df_2_long_1$cause, levels = c("Injuries","Communicable & Nutritional","Noncommunicable"))
+
+ggplot(df_2_long_1,aes(x = year, y = death_num, fill = cause)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Stacked Bar Chart of Death Num",
+       x = "Year",
+       y = "Death Num") +
+  facet_wrap(~sex, ncol = 1)+
+  coord_flip() +
+  theme_minimal()
+
+```
+
+
+
+Plot 4: Mosaic plot- Interactions of the categorical variables of 2019
+```{r}
+
+df_2_long_2019<-df_2_long %>%
+  filter(year == 2019)
+
+# 假设这三列不是因子或字符型，转换它们
+df_2_long_2019$region <-factor(df_2_long_2019$region, levels = c('Afr','Emr',"Sear",'Amr',"Wpr","Eur"))
+df_2_long_2019$age_group <- as.factor(df_2_long_2019$age_group)
+df_2_long_2019$sex <- as.factor(df_2_long_2019$sex)
+
+df_2_long_2019 <- df_2_long_2019 %>%
+  mutate(age_group2 = case_when(
+    age_group %in% c("0-28 days", "1-59 months", "5-14 years") ~ "<15",
+    age_group %in% c("30-49 years", "15-29 years") ~ "15-49",
+    age_group %in% c("50-59 years", "60-69 years") ~ "50-69",
+    TRUE ~ "70+"
+  ))
+
+colnames(df_2_long_2019)[colnames(df_2_long_2019) == "death_num"] <- "Freq"
+
+mosaic(age_group2~region,data=df_2_long_2019,highlighting_fill=c("#F1F1F1","#A7C6DD","#7C7BB2","#6B0077"),direction=c('v','h'))
+
+```
+```{r}
+mosaic(sex~age_group2,data=df_2_long_2019,highlighting_fill=c("#A7C6DD","#6B0077"),direction=c('v','h','h'))
+mosaic(sex~region,data=df_2_long_2019,highlighting_fill=c("#A7C6DD","#6B0077"),direction=c('v','h'))
+```
+
+Plot 5: Cleveland Dotplot- the main 2nd-lever causes and their distribution characteristics
+```{r,fig.height=8,fig.width=10}
+
+# 筛选出所有code的字符串长度等于2位的数据，建立新表
+filtered_data <- df_2_long %>%
+  filter(nchar(code) == 2)
+
+filtered_data <- filtered_data %>%
+  mutate(father_cause = case_when(
+    substr(code, 1, 1) == "1" ~ 'Communicable & Nutritional',
+    substr(code, 1, 1) == "2" ~ df_2_long$cause[df_2_long$code == "2"][1],
+    substr(code, 1, 1) == "3" ~ df_2_long$cause[df_2_long$code == "3"][1],
+    # TRUE ~ NA_character_
+  ))
+
+filtered_data <- filtered_data %>%
+  mutate(age_group2 = case_when(
+    age_group %in% c("0-28 days", "1-59 months", "5-14 years", "15-29 years") ~ "<30 years",
+    age_group %in% c("30-49 years") ~ "30-49 years",
+    age_group %in% c("50-59 years", "60-69 years") ~ "50-69 years",
+    TRUE ~ "70+ years"
+  ))
+
+filtered_data$father_cause <-factor(filtered_data$father_cause, levels = c("Noncommunicable","Communicable & Nutritional","Injuries"))
+
+library(lattice)
+
+filtered_data %>%
+  group_by(cause,age_group2) %>%
+  mutate(death_sum = sum(death_num)) %>%
+  ggplot( aes(x = reorder(cause, death_sum), y = death_sum, color = age_group2)) +
+  geom_point(position = position_dodge(width = 0), size = 1.5 )+
+  facet_grid(father_cause ~ ., scales = "free_y",space = "free_y") +
+  coord_flip() +
+  scale_y_log10()+
+  labs(title = "Cleveland Dotplot",
+       x = "Cause",
+       y = "Death Number",
+       color = "Father Cause") +
+  theme_minimal()+
+  theme(strip.text.y = element_text(angle = 90, hjust = 0.5,size=8))
+
+```
+
+Plot 6: PCA Analysis - similarity comparison across regions
+```{r}
+#PCA Analysis
+df_2_long_filtered <- df_2_long %>%
+  filter(level == 2)%>%
+  filter(year == 2000 | year == 2019 )%>%
+  mutate(age_group2 = case_when(
+    age_group %in% c("0-28 days", "1-59 months", "5-14 years", "15-29 years") ~ "<30 years",
+    age_group %in% c("30-49 years") ~ "30-49 years",
+    age_group %in% c("50-59 years", "60-69 years") ~ "50-69 years",
+    TRUE ~ "70+ years"
+  ))
+
+df_2_long_filtered <- df_2_long_filtered %>%
+  select(-age_group)%>%
+  select(-sex)%>%
+  select(-age_group2)
+
+df_2_long_filtered$region <- paste(df_2_long_filtered$region, df_2_long_filtered$year, sep = "_")
+df_2_long_filtered <- df_2_long_filtered %>%
+  select(- year)
+
+df_2_long_filtered <- df_2_long_filtered %>%
+  group_by(cause,region) %>%
+  summarise(death_num = sum(death_num))
+
+df_2_shorter <- df_2_long_filtered %>%
+  pivot_wider(names_from = cause,values_from = death_num, values_fill=0)
+
+# 假设 df 是你的数据框
+constant_columns <- sapply(df_2_shorter, function(col) length(unique(col)) == 1)
+df_2_shorter <- df_2_shorter[, !constant_columns]
+# 用一个小的非零值替换零值
+df_2_shorter[df_2_shorter == 0] <- 1e-10
+
+# PCA biplot
+pca_plot<- draw_biplot(df_2_shorter,point_size=1)+
+  scale_x_continuous(limits=c(-10,10))+
+  scale_y_continuous(limits=c(-9,5))+
+  theme_minimal()+
+  ggtitle('PCA Analysis')
+
+ggplotly(pca_plot)
+```
+
+
+```{r}
+
+
+
+
+```
+
+
