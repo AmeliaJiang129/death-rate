@@ -95,6 +95,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.2/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
 
 
 </head>
@@ -522,7 +530,7 @@ Attaching package: 'plotly'</code></pre>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co">#library(redav)</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(redav)</span>
 <span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
 <span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vcd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -537,24 +545,23 @@ Attaching package: 'plotly'</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in data</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="st">"ghecode2019_cleaned_2.xlsx"</span></span>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read data from excel</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="st">"data/clean/ghecode_cleaned_2.xlsx"</span></span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>df_2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (sheet_name <span class="cf">in</span> <span class="fu">excel_sheets</span>(file_path)) {</span>
 <span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  current_sheet <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path, <span class="at">sheet =</span> sheet_name)</span>
 <span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  df_2 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(df_2, current_sheet)</span>
 <span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>df_2<span class="sc">$</span>cause[df_2<span class="sc">$</span>cause <span class="sc">==</span> <span class="st">'Communicable, maternal, perinatal and nutritional conditions'</span>] <span class="ot">&lt;-</span> <span class="st">'Communicable &amp; Nutritional'</span></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>df_2<span class="sc">$</span>cause[df_2<span class="sc">$</span>cause <span class="sc">==</span> <span class="st">'Noncommunicable diseases'</span>] <span class="ot">&lt;-</span> <span class="st">'Noncommunicable'</span></span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>df_2_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(df_2,<span class="at">cols =</span> <span class="st">'0-28 days'</span><span class="sc">:</span><span class="st">'70+ years'</span>, <span class="at">names_to =</span> <span class="st">"age_group"</span>, <span class="at">values_to =</span> <span class="st">"death_num"</span>)</span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Data format conversion and preprocessing </span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>df_2<span class="sc">$</span>cause[df_2<span class="sc">$</span>cause <span class="sc">==</span> <span class="st">'Communicable, maternal, perinatal and nutritional conditions'</span>] <span class="ot">&lt;-</span> <span class="st">'Communicable &amp; Nutritional'</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>df_2<span class="sc">$</span>cause[df_2<span class="sc">$</span>cause <span class="sc">==</span> <span class="st">'Noncommunicable diseases'</span>] <span class="ot">&lt;-</span> <span class="st">'Noncommunicable'</span></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>df_2_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(df_2,<span class="at">cols =</span> <span class="st">'0-28 days'</span><span class="sc">:</span><span class="st">'70+ years'</span>, <span class="at">names_to =</span> <span class="st">"age_group"</span>, <span class="at">values_to =</span> <span class="st">"death_num"</span>)</span>
 <span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>df_2_long<span class="sc">$</span>age_group <span class="ot">&lt;-</span> <span class="fu">factor</span>(df_2_long<span class="sc">$</span>age_group, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"0-28 days"</span>, <span class="st">"1-59 months"</span>, <span class="st">"5-14 years"</span>, <span class="st">"15-29 years"</span>, <span class="st">"30-49 years"</span>, <span class="st">"50-59 years"</span>, <span class="st">"60-69 years"</span>,<span class="st">"70+ years"</span>))</span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>df_2_long<span class="sc">$</span>sex <span class="ot">&lt;-</span><span class="fu">factor</span>(df_2_long<span class="sc">$</span>sex, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Male"</span>,<span class="st">"Female"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>df_2_long<span class="sc">$</span>sex <span class="ot">&lt;-</span><span class="fu">factor</span>(df_2_long<span class="sc">$</span>sex, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Male"</span>,<span class="st">"Female"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Plot 1: Bar Chart- Temporal trend</p>
+<p>First, we analyze the change over time in the number of deaths of different causes on a global scale. It is noted that there is an upward trend in the number of deaths globally as a whole. In particular, deaths from non-communicable diseases are the main source of the rise in the number of deaths from all factors, while deaths from communicable diseases and problems such as malnutrition show a downward trend. The overall number of casualties is relatively stable and hardly changes over time.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -574,7 +581,7 @@ Attaching package: 'plotly'</code></pre>
 <p><img src="results_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
-<p>Plot 2: Stacked Bar chart - temporal trend of different causes faceted on region</p>
+<p>In terms of specific regions, Wpr and Sear had the highest number of deaths, while Amr and Emr had the lowest. In terms of changes in the number of deaths by region, Wpr, Emr and Amr show an upward trend, Afr shows a downward trend, and Sear and Eur remain more or less unchanged. For Wpr, Emr and Amr, where the number of deaths increased, noncommunicable disease was the most important source of increase. For Afr, where the overall number of deaths has declined, it is noted that a significant decline in deaths due to infectious diseases and malnutrition is the main reason for the overall decline, which even outweighs the rise in noncommunicable factors, resulting in a downward trend in the overall number of deaths.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -597,7 +604,7 @@ Attaching package: 'plotly'</code></pre>
 <p><img src="results_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
-<p>Plot 3: Stacked Bar chart - temporal trend of different causes faceted on sex</p>
+<p>By gender, the overall number of deaths is higher for males than for females, and both show an upward trend over time. It is noted that for both gender groups, the number of deaths from noncommunicable disease is increasing, and the number of deaths from both communicable and nutritional causes is decreasing. It is also noteworthy that there are significantly more deaths from injuries and noncommunicable disease among males than females.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -620,14 +627,15 @@ Attaching package: 'plotly'</code></pre>
 <p><img src="results_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="768"></p>
 </div>
 </div>
-<p>Plot 4: Mosaic plot- Interactions of the categorical variables of 2019</p>
+<p>The following analysis of the 2019 data analyzes whether there is an interaction relationship between the number of deaths in different regions, ages, and sexes.</p>
+<p>First note that the age composition of deaths is characterized differently across region. Afr and Emr have more young people in their death cohorts. Especially for Afr, the number of deaths under 15 accounts for almost half of the overall number of deaths, which may be related to the health care conditions in the region. For Amr, Wpr and Eur, on the other hand, the age group over 69 accounted for the majority of the overall number of deaths.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>df_2_long_2019<span class="ot">&lt;-</span>df_2_long <span class="sc">%&gt;%</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2019</span>)</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设这三列不是因子或字符型，转换它们</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2019</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(level <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>df_2_long_2019<span class="sc">$</span>region <span class="ot">&lt;-</span><span class="fu">factor</span>(df_2_long_2019<span class="sc">$</span>region, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">'Afr'</span>,<span class="st">'Emr'</span>,<span class="st">"Sear"</span>,<span class="st">'Amr'</span>,<span class="st">"Wpr"</span>,<span class="st">"Eur"</span>))</span>
 <span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>df_2_long_2019<span class="sc">$</span>age_group <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(df_2_long_2019<span class="sc">$</span>age_group)</span>
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>df_2_long_2019<span class="sc">$</span>sex <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(df_2_long_2019<span class="sc">$</span>sex)</span>
@@ -639,58 +647,76 @@ Attaching package: 'plotly'</code></pre>
 <span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"50-59 years"</span>, <span class="st">"60-69 years"</span>) <span class="sc">~</span> <span class="st">"50-69"</span>,</span>
 <span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"70+"</span></span>
 <span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df_2_long_2019)[<span class="fu">colnames</span>(df_2_long_2019) <span class="sc">==</span> <span class="st">"death_num"</span>] <span class="ot">&lt;-</span> <span class="st">"Freq"</span></span>
-<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a><span class="fu">mosaic</span>(age_group2<span class="sc">~</span>region,<span class="at">data=</span>df_2_long_2019,<span class="at">highlighting_fill=</span><span class="fu">c</span>(<span class="st">"#F1F1F1"</span>,<span class="st">"#A7C6DD"</span>,<span class="st">"#7C7BB2"</span>,<span class="st">"#6B0077"</span>),<span class="at">direction=</span><span class="fu">c</span>(<span class="st">'v'</span>,<span class="st">'h'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>df_2_long_2019<span class="sc">$</span>cause <span class="ot">&lt;-</span><span class="fu">factor</span>(df_2_long_2019<span class="sc">$</span>cause, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Communicable &amp; Nutritional"</span>,<span class="st">"Noncommunicable"</span>,<span class="st">"Injuries"</span>))</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df_2_long_2019)[<span class="fu">colnames</span>(df_2_long_2019) <span class="sc">==</span> <span class="st">"death_num"</span>] <span class="ot">&lt;-</span> <span class="st">"Freq"</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a><span class="fu">mosaic</span>(age_group2<span class="sc">~</span>region,<span class="at">data=</span>df_2_long_2019,<span class="at">highlighting_fill=</span><span class="fu">c</span>(<span class="st">"#F1F1F1"</span>,<span class="st">"#A7C6DD"</span>,<span class="st">"#7C7BB2"</span>,<span class="st">"#6B0077"</span>),<span class="at">direction=</span><span class="fu">c</span>(<span class="st">'v'</span>,<span class="st">'h'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="results_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>It is also noted that the age distribution within the groups of people who died due to different causes varies. The adolescent group accounts for a larger proportion of deaths due to infectious diseases and malnutrition, while the 70+ age group accounts for a larger proportion of deaths due to noncommunicable diseases. Deaths from accidental injuries and deaths are almost evenly distributed across age groups.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mosaic</span>(sex<span class="sc">~</span>age_group2,<span class="at">data=</span>df_2_long_2019,<span class="at">highlighting_fill=</span><span class="fu">c</span>(<span class="st">"#A7C6DD"</span>,<span class="st">"#6B0077"</span>),<span class="at">direction=</span><span class="fu">c</span>(<span class="st">'v'</span>,<span class="st">'h'</span>,<span class="st">'h'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mosaic</span>(age_group2 <span class="sc">~</span> cause,</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">data =</span> df_2_long_2019,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">highlighting_fill =</span> <span class="fu">c</span>(<span class="st">"#F1F1F1"</span>, <span class="st">"#A7C6DD"</span>,<span class="st">"#7C7BB2"</span>, <span class="st">"#6B0077"</span>),</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">direction =</span> <span class="fu">c</span>(<span class="st">'v'</span>, <span class="st">'h'</span>),</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">rot_labels =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">90</span>),</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">fontsize=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="results_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mosaic</span>(sex<span class="sc">~</span>region,<span class="at">data=</span>df_2_long_2019,<span class="at">highlighting_fill=</span><span class="fu">c</span>(<span class="st">"#A7C6DD"</span>,<span class="st">"#6B0077"</span>),<span class="at">direction=</span><span class="fu">c</span>(<span class="st">'v'</span>,<span class="st">'h'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="results_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid" width="672"></p>
+<p><img src="results_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="576"></p>
 </div>
 </div>
-<p>Plot 5: Cleveland Dotplot- the main 2nd-lever causes and their distribution characteristics</p>
+<p>The gender distribution is almost even across age and regional divisions.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 筛选出所有code的字符串长度等于2位的数据，建立新表</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> df_2_long <span class="sc">%&gt;%</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">nchar</span>(code) <span class="sc">==</span> <span class="dv">2</span>)</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> filtered_data <span class="sc">%&gt;%</span></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">father_cause =</span> <span class="fu">case_when</span>(</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">substr</span>(code, <span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">==</span> <span class="st">"1"</span> <span class="sc">~</span> <span class="st">'Communicable &amp; Nutritional'</span>,</span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">substr</span>(code, <span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">==</span> <span class="st">"2"</span> <span class="sc">~</span> df_2_long<span class="sc">$</span>cause[df_2_long<span class="sc">$</span>code <span class="sc">==</span> <span class="st">"2"</span>][<span class="dv">1</span>],</span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">substr</span>(code, <span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">==</span> <span class="st">"3"</span> <span class="sc">~</span> df_2_long<span class="sc">$</span>cause[df_2_long<span class="sc">$</span>code <span class="sc">==</span> <span class="st">"3"</span>][<span class="dv">1</span>],</span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TRUE ~ NA_character_</span></span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> filtered_data <span class="sc">%&gt;%</span></span>
-<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_group2 =</span> <span class="fu">case_when</span>(</span>
-<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"0-28 days"</span>, <span class="st">"1-59 months"</span>, <span class="st">"5-14 years"</span>, <span class="st">"15-29 years"</span>) <span class="sc">~</span> <span class="st">"&lt;30 years"</span>,</span>
-<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"30-49 years"</span>) <span class="sc">~</span> <span class="st">"30-49 years"</span>,</span>
-<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"50-59 years"</span>, <span class="st">"60-69 years"</span>) <span class="sc">~</span> <span class="st">"50-69 years"</span>,</span>
-<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"70+ years"</span></span>
-<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>filtered_data<span class="sc">$</span>father_cause <span class="ot">&lt;-</span><span class="fu">factor</span>(filtered_data<span class="sc">$</span>father_cause, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Noncommunicable"</span>,<span class="st">"Communicable &amp; Nutritional"</span>,<span class="st">"Injuries"</span>))</span>
-<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lattice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mosaic</span>(sex<span class="sc">~</span>age_group2,<span class="at">data=</span>df_2_long_2019,<span class="at">highlighting_fill=</span><span class="fu">c</span>(<span class="st">"#A7C6DD"</span>,<span class="st">"#6B0077"</span>),<span class="at">direction=</span><span class="fu">c</span>(<span class="st">'v'</span>,<span class="st">'h'</span>,<span class="st">'h'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mosaic</span>(sex<span class="sc">~</span>region,<span class="at">data=</span>df_2_long_2019,<span class="at">highlighting_fill=</span><span class="fu">c</span>(<span class="st">"#A7C6DD"</span>,<span class="st">"#6B0077"</span>),<span class="at">direction=</span><span class="fu">c</span>(<span class="st">'v'</span>,<span class="st">'h'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Below, we analyze the causes of death more specifically. In the above analysis, we simply categorized the causes of death into three main categories-communicable &amp; nutritional, noncommunicable, and injuries-and now we will break them down more closely to find the major causes of death in each category.</p>
+<p>Among noncommunicable diseases, Cardiovascular diseases, Malignant neoplasms and Respiratory diseases are the top 3 causes for death. Among communicable &amp; nutritional reasons, Infectious diseases are the top 3 causes for death. Among communicable &amp; nutritional reasons, Infectious and parasitic diseases, Neonatal conditions and Respiratory Infectious are the top 3 causes for death. For injuries, unintentional diseases are the top 3 causes. For injuries, unintentional injuries and deaths account for a higher proportion of deaths and injuries than intentional injuries and deaths.</p>
+<p>Also note that the percentage of age in the different factors varies, an observation that is the same as the mosaic plot findings above.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 筛选出所有code的字符串长度等于2位的数据，建立新表</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> df_2_long <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">nchar</span>(code) <span class="sc">==</span> <span class="dv">2</span>)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> filtered_data <span class="sc">%&gt;%</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">father_cause =</span> <span class="fu">case_when</span>(</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">substr</span>(code, <span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">==</span> <span class="st">"1"</span> <span class="sc">~</span> <span class="st">'Communicable &amp; Nutritional'</span>,</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">substr</span>(code, <span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">==</span> <span class="st">"2"</span> <span class="sc">~</span> df_2_long<span class="sc">$</span>cause[df_2_long<span class="sc">$</span>code <span class="sc">==</span> <span class="st">"2"</span>][<span class="dv">1</span>],</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">substr</span>(code, <span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">==</span> <span class="st">"3"</span> <span class="sc">~</span> df_2_long<span class="sc">$</span>cause[df_2_long<span class="sc">$</span>code <span class="sc">==</span> <span class="st">"3"</span>][<span class="dv">1</span>],</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> filtered_data <span class="sc">%&gt;%</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_group2 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"0-28 days"</span>, <span class="st">"1-59 months"</span>, <span class="st">"5-14 years"</span>, <span class="st">"15-29 years"</span>) <span class="sc">~</span> <span class="st">"&lt;30 years"</span>,</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"30-49 years"</span>) <span class="sc">~</span> <span class="st">"30-49 years"</span>,</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"50-59 years"</span>, <span class="st">"60-69 years"</span>) <span class="sc">~</span> <span class="st">"50-69 years"</span>,</span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"70+ years"</span></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>filtered_data<span class="sc">$</span>father_cause <span class="ot">&lt;-</span><span class="fu">factor</span>(filtered_data<span class="sc">$</span>father_cause, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Noncommunicable"</span>,<span class="st">"Communicable &amp; Nutritional"</span>,<span class="st">"Injuries"</span>))</span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lattice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>
@@ -703,55 +729,81 @@ Attaching package: 'lattice'</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="sc">%&gt;%</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cause,age_group2) <span class="sc">%&gt;%</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">death_sum =</span> <span class="fu">sum</span>(death_num)) <span class="sc">%&gt;%</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>( <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(cause, death_sum), <span class="at">y =</span> death_sum, <span class="at">color =</span> age_group2)) <span class="sc">+</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="dv">0</span>), <span class="at">size =</span> <span class="fl">1.5</span> )<span class="sc">+</span></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(father_cause <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>,<span class="at">space =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>()<span class="sc">+</span></span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Cleveland Dotplot"</span>,</span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Cause"</span>,</span>
-<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Death Number"</span>,</span>
-<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Father Cause"</span>) <span class="sc">+</span></span>
-<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
-<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">strip.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>,<span class="at">size=</span><span class="dv">8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="sc">%&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cause,age_group2) <span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">death_sum =</span> <span class="fu">sum</span>(death_num)) <span class="sc">%&gt;%</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>( <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(cause, death_sum), <span class="at">y =</span> death_sum, <span class="at">color =</span> age_group2)) <span class="sc">+</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="dv">0</span>), <span class="at">size =</span> <span class="fl">2.5</span> )<span class="sc">+</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(father_cause <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>,<span class="at">space =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>()<span class="sc">+</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Cleveland Dotplot - Main 2nd-level Causes and Difference on Age Groups"</span>,</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Cause"</span>,</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Death Number"</span>,</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Age Group"</span>)<span class="sc">+</span></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">strip.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>,<span class="at">size=</span><span class="dv">9</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Transformation introduced infinite values in continuous y-axis</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="results_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="960"></p>
+<p><img src="results_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
-<p>Plot 6: PCA Analysis - similarity comparison across regions</p>
+<p>Among the differences in the regional distribution of the different factors, it is noted that Sear, Eur and Wpr contribute the highest number of deaths in noncommunicable causes, while Afr and Sear have a larger share of the dead in communicable as well as nutritional causes.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">#PCA Analysis</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long <span class="sc">%&gt;%</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(level <span class="sc">==</span> <span class="dv">2</span>)<span class="sc">%&gt;%</span></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2000</span> <span class="sc">|</span> year <span class="sc">==</span> <span class="dv">2019</span> )<span class="sc">%&gt;%</span></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_group2 =</span> <span class="fu">case_when</span>(</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"0-28 days"</span>, <span class="st">"1-59 months"</span>, <span class="st">"5-14 years"</span>, <span class="st">"15-29 years"</span>) <span class="sc">~</span> <span class="st">"&lt;30 years"</span>,</span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"30-49 years"</span>) <span class="sc">~</span> <span class="st">"30-49 years"</span>,</span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"50-59 years"</span>, <span class="st">"60-69 years"</span>) <span class="sc">~</span> <span class="st">"50-69 years"</span>,</span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"70+ years"</span></span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>age_group)<span class="sc">%&gt;%</span></span>
-<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>sex)<span class="sc">%&gt;%</span></span>
-<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>age_group2)</span>
-<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">paste</span>(df_2_long_filtered<span class="sc">$</span>region, df_2_long_filtered<span class="sc">$</span>year, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
-<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
-<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span> year)</span>
-<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
-<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cause,region) <span class="sc">%&gt;%</span></span>
-<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">death_num =</span> <span class="fu">sum</span>(death_num))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="sc">%&gt;%</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cause,region) <span class="sc">%&gt;%</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">death_sum =</span> <span class="fu">sum</span>(death_num)) <span class="sc">%&gt;%</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>( <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(cause, death_sum), <span class="at">y =</span> death_sum, <span class="at">color =</span> region)) <span class="sc">+</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="dv">0</span>), <span class="at">size =</span> <span class="fl">2.5</span> )<span class="sc">+</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(father_cause <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>,<span class="at">space =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>()<span class="sc">+</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Cleveland Dotplot - Main 2nd-level Causes and Difference on Regions"</span>,</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Cause"</span>,</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Death Number"</span>,</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Region"</span>) <span class="sc">+</span></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">strip.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>,<span class="at">size=</span><span class="dv">9</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Transformation introduced infinite values in continuous y-axis</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<p>Finally, we will analyze the similarity of the distribution of causes of death in different geographic areas, with method Pricipal Component Analysis (PCA).</p>
+<p>Firstly, according to the data of 2019, Eur, Amr and Emr are more similar in the characteristics of the distribution of causes of death, with a lower number of deaths in all three major categories of causes.Wpr has more deaths due to noncommunicable diseases, Sear has more deaths due to injuries, and Afr has more deaths due to Communicable and nutritional diseases.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long <span class="sc">%&gt;%</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(level <span class="sc">==</span> <span class="dv">1</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>( year <span class="sc">==</span> <span class="dv">2019</span> )<span class="sc">%&gt;%</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_group2 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"0-28 days"</span>, <span class="st">"1-59 months"</span>, <span class="st">"5-14 years"</span>, <span class="st">"15-29 years"</span>) <span class="sc">~</span> <span class="st">"&lt;30 years"</span>,</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"30-49 years"</span>) <span class="sc">~</span> <span class="st">"30-49 years"</span>,</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"50-59 years"</span>, <span class="st">"60-69 years"</span>) <span class="sc">~</span> <span class="st">"50-69 years"</span>,</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"70+ years"</span></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>age_group)<span class="sc">%&gt;%</span></span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>sex)<span class="sc">%&gt;%</span></span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>age_group2)</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">paste</span>(df_2_long_filtered<span class="sc">$</span>region, df_2_long_filtered<span class="sc">$</span>year, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span> year)</span>
+<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cause,region) <span class="sc">%&gt;%</span></span>
+<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">death_num =</span> <span class="fu">sum</span>(death_num))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>`summarise()` has grouped output by 'cause'. You can override using the
@@ -759,24 +811,100 @@ Attaching package: 'lattice'</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>df_2_shorter <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> cause,<span class="at">values_from =</span> death_num, <span class="at">values_fill=</span><span class="dv">0</span>)</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设 df 是你的数据框</span></span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>constant_columns <span class="ot">&lt;-</span> <span class="fu">sapply</span>(df_2_shorter, <span class="cf">function</span>(col) <span class="fu">length</span>(<span class="fu">unique</span>(col)) <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>df_2_shorter <span class="ot">&lt;-</span> df_2_shorter[, <span class="sc">!</span>constant_columns]</span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 用一个小的非零值替换零值</span></span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>df_2_shorter[df_2_shorter <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="fl">1e-10</span></span>
-<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA biplot</span></span>
-<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a><span class="co">#pca_plot&lt;- draw_biplot(df_2_shorter,point_size=1)+</span></span>
-<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a> <span class="co"># scale_x_continuous(limits=c(-10,10))+</span></span>
-<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">#scale_y_continuous(limits=c(-9,5))+</span></span>
-<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">#theme_minimal()+</span></span>
-<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">#ggtitle('PCA Analysis')</span></span>
-<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a><span class="co">#ggplotly(pca_plot)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>df_2_shorter <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> cause,<span class="at">values_from =</span> death_num, <span class="at">values_fill=</span><span class="dv">0</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设 df 是你的数据框</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>constant_columns <span class="ot">&lt;-</span> <span class="fu">sapply</span>(df_2_shorter, <span class="cf">function</span>(col) <span class="fu">length</span>(<span class="fu">unique</span>(col)) <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>df_2_shorter <span class="ot">&lt;-</span> df_2_shorter[, <span class="sc">!</span>constant_columns]</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 用一个小的非零值替换零值</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>df_2_shorter[df_2_shorter <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="fl">1e-10</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA biplot</span></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>pca_plot<span class="ot">&lt;-</span> <span class="fu">draw_biplot</span>(df_2_shorter,<span class="at">point_size=</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>,<span class="dv">3</span>))<span class="sc">+</span></span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>,<span class="dv">3</span>))<span class="sc">+</span></span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'PCA Analysis - Similarity Comparison across Regions'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for x is already present.
+Adding another scale for x, which will replace the existing scale.
+Scale for y is already present.
+Adding another scale for y, which will replace the existing scale.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(pca_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-04f19f07372615a775cb" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-04f19f07372615a775cb">{"x":{"data":[{"x":[0.19646645739532864,-0.62204259303711218,-1.5944940773424972,-0.84826168633121413,1.8029547070194045,1.0653771922960893],"y":[-1.9322674631688421,0.34435913130222884,-0.32575009330309002,0.90629212917230295,-0.31186822525976982,1.3192345212571701],"text":["PC1:  0.1964665<br />PC2: -1.9322675","PC1: -0.6220426<br />PC2:  0.3443591","PC1: -1.5944941<br />PC2: -0.3257501","PC1: -0.8482617<br />PC2:  0.9062921","PC1:  1.8029547<br />PC2: -0.3118682","PC1:  1.0653772<br />PC2:  1.3192345"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(100,149,237,1)","opacity":1,"size":3.7795275590551185,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(100,149,237,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.19646645739532864,-0.62204259303711218,-1.5944940773424972,-0.84826168633121413,1.8029547070194045,1.0653771922960893],"y":[-2.1322674631688421,0.14435913130222883,-0.52575009330309008,0.706292129172303,-0.51186822525976983,1.1192345212571702],"text":["Afr_2019","Amr_2019","Emr_2019","Eur_2019","Sear_2019","Wpr_2019"],"hovertext":["PC1:  0.1964665<br />PC2: -1.9322675<br />label: Afr_2019","PC1: -0.6220426<br />PC2:  0.3443591<br />label: Amr_2019","PC1: -1.5944941<br />PC2: -0.3257501<br />label: Emr_2019","PC1: -0.8482617<br />PC2:  0.9062921<br />label: Eur_2019","PC1:  1.8029547<br />PC2: -0.3118682<br />label: Sear_2019","PC1:  1.0653772<br />PC2:  1.3192345<br />label: Wpr_2019"],"textfont":{"size":11.338582677165356,"color":"rgba(100,149,237,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,0.82246564427182189,null,0,1.6546281545678296,null,0,1.0651923077683945],"y":[0,-1.5968609463900554,null,0,-0.11348626228534606,null,0,1.4092674354400296],"text":["x: 0<br />y: 0<br />xend * mult: 0.8224656<br />yend * mult: -1.5968609<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult: 0.8224656<br />yend * mult: -1.5968609<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult: 1.6546282<br />yend * mult: -0.1134863<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult: 1.6546282<br />yend * mult: -0.1134863<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult: 1.0651923<br />yend * mult:  1.4092674<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult: 1.0651923<br />yend * mult:  1.4092674<br />highlight: FALSE"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(102,102,102,1)","dash":"solid"},"hoveron":"points","name":"FALSE","legendgroup":"FALSE","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.84713961359997658,1.7042669992048645,1.0971480770014463],"y":[-1.6447667747817571,-0.11689085015390645,1.4515454585032306],"text":["Communicable & Nutritional","Injuries","Noncommunicable"],"hovertext":["xend * mult * 1.03: 0.8471396<br />yend * mult * 1.03: -1.6447668<br />label: Communicable & Nutritional<br />angle: -62.749200<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03: 1.7042670<br />yend * mult * 1.03: -0.1168909<br />label: Injuries<br />angle:  -3.923611<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03: 1.0971481<br />yend * mult * 1.03:  1.4515455<br />label: Noncommunicable<br />angle:  52.916253<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0"],"textfont":{"size":11.338582677165356,"color":"rgba(102,102,102,1)"},"type":"scatter","mode":"text","hoveron":"points","name":"FALSE","legendgroup":"FALSE","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":40.182648401826498,"l":37.260273972602747},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"PCA Analysis - Similarity Comparison across Regions","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-3.2999999999999998,3.2999999999999998],"tickmode":"array","ticktext":["-2","0","2"],"tickvals":[-2,0,2],"categoryorder":"array","categoryarray":["-2","0","2"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"PC 1 (53.8%)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"scaleanchor":"y","scaleratio":1,"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-4.3499999999999996,3.3500000000000001],"tickmode":"array","ticktext":["-4","-2","0","2"],"tickvals":[-4,-2,0,2],"categoryorder":"array","categoryarray":["-4","-2","0","2"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"PC 2 (44.1%)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"scaleanchor":"x","scaleratio":1,"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"75a030fbc127":{"x":{},"y":{},"type":"scatter"},"75a060460090":{"x":{},"y":{},"label":{}},"75a013cf1f51":{"x":{},"y":{},"xend":{},"yend":{},"colour":{}},"75a03110900":{"x":{},"y":{},"label":{},"angle":{},"colour":{},"hjust":{}}},"cur_data":"75a030fbc127","visdat":{"75a030fbc127":["function (y) ","x"],"75a060460090":["function (y) ","x"],"75a013cf1f51":["function (y) ","x"],"75a03110900":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Below, the data for 2000 and 2019 are compared to see if the causes of death in different regions have changed trends over the two decades. Notice that the distributions for Eur, Amr, and Emr remain relatively similar, and that Emr and Amr show the same changing trends, i.e., an increase in the share of deaths from noncommunicable diseases and a decrease in deaths from communicable. For Afr, Sear, and Wpr, despite the very unlike characterization of the causes of death for ta, they show the same trend of change from 2000 to 2019 (same direction of panning for all three points). They all had a decrease in the share of deaths due to communicable &amp; nutritional, and an increase in the share of noncommunicable.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long <span class="sc">%&gt;%</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(level <span class="sc">==</span> <span class="dv">1</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>( year <span class="sc">==</span> <span class="dv">2000</span><span class="sc">|</span>year <span class="sc">==</span> <span class="dv">2019</span> )<span class="sc">%&gt;%</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_group2 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"0-28 days"</span>, <span class="st">"1-59 months"</span>, <span class="st">"5-14 years"</span>, <span class="st">"15-29 years"</span>) <span class="sc">~</span> <span class="st">"&lt;30 years"</span>,</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"30-49 years"</span>) <span class="sc">~</span> <span class="st">"30-49 years"</span>,</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"50-59 years"</span>, <span class="st">"60-69 years"</span>) <span class="sc">~</span> <span class="st">"50-69 years"</span>,</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"70+ years"</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>age_group)<span class="sc">%&gt;%</span></span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>sex)<span class="sc">%&gt;%</span></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>age_group2)</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">paste</span>(df_2_long_filtered<span class="sc">$</span>region, df_2_long_filtered<span class="sc">$</span>year, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span> year)</span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cause,region)<span class="sc">%&gt;%</span></span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">death_num =</span> <span class="fu">sum</span>(death_num))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'cause'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>df_2_shorter <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> cause,<span class="at">values_from =</span> death_num, <span class="at">values_fill=</span><span class="dv">0</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设 df 是你的数据框</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>constant_columns <span class="ot">&lt;-</span> <span class="fu">sapply</span>(df_2_shorter, <span class="cf">function</span>(col) <span class="fu">length</span>(<span class="fu">unique</span>(col)) <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>df_2_shorter <span class="ot">&lt;-</span> df_2_shorter[, <span class="sc">!</span>constant_columns]</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 用一个小的非零值替换零值</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>df_2_shorter[df_2_shorter <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="fl">1e-10</span></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA biplot</span></span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>pca_plot<span class="ot">&lt;-</span> <span class="fu">draw_biplot</span>(df_2_shorter,<span class="at">point_size=</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>,<span class="dv">3</span>))<span class="sc">+</span></span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>,<span class="dv">3</span>))<span class="sc">+</span></span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'PCA Analysis - Similarity Comparison across Regions over Time'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for x is already present.
+Adding another scale for x, which will replace the existing scale.
+Scale for y is already present.
+Adding another scale for y, which will replace the existing scale.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(pca_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-ac48eae5632c61938eee" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-ac48eae5632c61938eee">{"x":{"data":[{"x":[-0.66586508731067218,-0.35401723063155466,-0.99224629433377731,-0.35789010607539917,-2.0149343841704925,-1.5394623099017593,0.20475036089895698,-0.38253272892746754,1.3742440053942249,1.776957993016985,1.3242190425716338,1.6267767394693213],"y":[2.0703773120708546,1.2963566354280263,-0.50454891679871439,-0.64854740240894349,-0.076607306974488198,-0.26766152925290726,-0.98427164744941031,-1.2201715855691915,1.8351603467360755,0.24431702925635043,-0.51162094642336864,-1.2327819886142852],"text":["PC1: -0.6658651<br />PC2:  2.07037731","PC1: -0.3540172<br />PC2:  1.29635664","PC1: -0.9922463<br />PC2: -0.50454892","PC1: -0.3578901<br />PC2: -0.64854740","PC1: -2.0149344<br />PC2: -0.07660731","PC1: -1.5394623<br />PC2: -0.26766153","PC1:  0.2047504<br />PC2: -0.98427165","PC1: -0.3825327<br />PC2: -1.22017159","PC1:  1.3742440<br />PC2:  1.83516035","PC1:  1.7769580<br />PC2:  0.24431703","PC1:  1.3242190<br />PC2: -0.51162095","PC1:  1.6267767<br />PC2: -1.23278199"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(100,149,237,1)","opacity":1,"size":3.7795275590551185,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(100,149,237,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-0.66586508731067218,-0.35401723063155466,-0.99224629433377731,-0.35789010607539917,-2.0149343841704925,-1.5394623099017593,0.20475036089895698,-0.38253272892746754,1.3742440053942249,1.776957993016985,1.3242190425716338,1.6267767394693213],"y":[1.8703773120708547,1.0963566354280263,-0.70454891679871445,-0.84854740240894344,-0.27660730697448821,-0.46766152925290727,-1.1842716474494104,-1.4201715855691914,1.6351603467360756,0.044317029256350421,-0.71162094642336871,-1.4327819886142852],"text":["Afr_2000","Afr_2019","Amr_2000","Amr_2019","Emr_2000","Emr_2019","Eur_2000","Eur_2019","Sear_2000","Sear_2019","Wpr_2000","Wpr_2019"],"hovertext":["PC1: -0.6658651<br />PC2:  2.07037731<br />label: Afr_2000","PC1: -0.3540172<br />PC2:  1.29635664<br />label: Afr_2019","PC1: -0.9922463<br />PC2: -0.50454892<br />label: Amr_2000","PC1: -0.3578901<br />PC2: -0.64854740<br />label: Amr_2019","PC1: -2.0149344<br />PC2: -0.07660731<br />label: Emr_2000","PC1: -1.5394623<br />PC2: -0.26766153<br />label: Emr_2019","PC1:  0.2047504<br />PC2: -0.98427165<br />label: Eur_2000","PC1: -0.3825327<br />PC2: -1.22017159<br />label: Eur_2019","PC1:  1.3742440<br />PC2:  1.83516035<br />label: Sear_2000","PC1:  1.7769580<br />PC2:  0.24431703<br />label: Sear_2019","PC1:  1.3242190<br />PC2: -0.51162095<br />label: Wpr_2000","PC1:  1.6267767<br />PC2: -1.23278199<br />label: Wpr_2019"],"textfont":{"size":11.338582677165356,"color":"rgba(100,149,237,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,0.3692203458150316,null,0,1.7498735319665826,null,0,1.5181740927821705],"y":[0,1.9885854628166824,null,0,0.54926855257086682,null,0,-1.1167208835993028],"text":["x: 0<br />y: 0<br />xend * mult: 0.3692203<br />yend * mult:  1.9885855<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult: 0.3692203<br />yend * mult:  1.9885855<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult: 1.7498735<br />yend * mult:  0.5492686<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult: 1.7498735<br />yend * mult:  0.5492686<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult: 1.5181741<br />yend * mult: -1.1167209<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult: 1.5181741<br />yend * mult: -1.1167209<br />highlight: FALSE"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(102,102,102,1)","dash":"solid"},"hoveron":"points","name":"FALSE","legendgroup":"FALSE","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.38029695618948256,1.8023697379255801,1.5637193155656357],"y":[2.0482430267011829,0.5657466091479928,-1.1502225101072818],"text":["Communicable & Nutritional","Injuries","Noncommunicable"],"hovertext":["xend * mult * 1.03: 0.380297<br />yend * mult * 1.03:  2.0482430<br />label: Communicable & Nutritional<br />angle:  79.48168<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03: 1.802370<br />yend * mult * 1.03:  0.5657466<br />label: Injuries<br />angle:  17.42657<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03: 1.563719<br />yend * mult * 1.03: -1.1502225<br />label: Noncommunicable<br />angle: -36.33702<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0"],"textfont":{"size":11.338582677165356,"color":"rgba(102,102,102,1)"},"type":"scatter","mode":"text","hoveron":"points","name":"FALSE","legendgroup":"FALSE","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":40.182648401826498,"l":37.260273972602747},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"PCA Analysis - Similarity Comparison across Regions over Time","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-3.2999999999999998,3.2999999999999998],"tickmode":"array","ticktext":["-2","0","2"],"tickvals":[-2,0,2],"categoryorder":"array","categoryarray":["-2","0","2"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"PC 1 (53.8%)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"scaleanchor":"y","scaleratio":1,"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-4.3499999999999996,3.3500000000000001],"tickmode":"array","ticktext":["-4","-2","0","2"],"tickvals":[-4,-2,0,2],"categoryorder":"array","categoryarray":["-4","-2","0","2"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"PC 2 (43.6%)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"scaleanchor":"x","scaleratio":1,"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"75a036828682":{"x":{},"y":{},"type":"scatter"},"75a0334cdcc3":{"x":{},"y":{},"label":{}},"75a07b31a084":{"x":{},"y":{},"xend":{},"yend":{},"colour":{}},"75a07721794b":{"x":{},"y":{},"label":{},"angle":{},"colour":{},"hjust":{}}},"cur_data":"75a036828682","visdat":{"75a036828682":["function (y) ","x"],"75a0334cdcc3":["function (y) ","x"],"75a07b31a084":["function (y) ","x"],"75a07721794b":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
 </div>
 
 
