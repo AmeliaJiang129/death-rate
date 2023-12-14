@@ -153,6 +153,9 @@ To sum up, male has higher death rate and lower life expectancy than women. The 
 Further, we are interested in the distribution of death rate over age groups.
 
 ```{r}
+death_rate_global <- global_data %>%
+  filter(Indicator == 'death_rate_age')
+
 # Order age groups
 age_order <- c("<1 year", "1-4 years", "5-9 years", "10-14 years", "15-19 years", 
                "20-24 years", "25-29 years", "30-34 years", "35-39 years", 
@@ -403,13 +406,13 @@ df_2_shorter <- df_2_shorter[, !constant_columns]
 df_2_shorter[df_2_shorter == 0] <- 1e-10
 
 # PCA biplot
-pca_plot<- draw_biplot(df_2_shorter,point_size=1)+
-  scale_x_continuous(limits=c(-10,10))+
-  scale_y_continuous(limits=c(-9,5))+
-  theme_minimal()+
-  ggtitle('PCA Analysis')
+#pca_plot<- draw_biplot(df_2_shorter,point_size=1)+
+ # scale_x_continuous(limits=c(-10,10))+
+  #scale_y_continuous(limits=c(-9,5))+
+  #theme_minimal()+
+  #ggtitle('PCA Analysis')
 
-ggplotly(pca_plot)
+#ggplotly(pca_plot)
 ```
 
 ```{r}
@@ -418,4 +421,3 @@ ggplotly(pca_plot)
 
 
 ```
-
