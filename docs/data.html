@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -62,6 +96,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -142,8 +178,21 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#description" id="toc-description" class="nav-link active" data-scroll-target="#description"><span class="header-section-number">2.1</span> Description</a></li>
-  <li><a href="#missing-value-analysis" id="toc-missing-value-analysis" class="nav-link" data-scroll-target="#missing-value-analysis"><span class="header-section-number">2.2</span> Missing value analysis</a></li>
+  <li><a href="#technical-description" id="toc-technical-description" class="nav-link active" data-scroll-target="#technical-description"><span class="header-section-number">2.1</span> Technical description</a>
+  <ul class="collapse">
+  <li><a href="#data-source-1-ghe-life-tables" id="toc-data-source-1-ghe-life-tables" class="nav-link" data-scroll-target="#data-source-1-ghe-life-tables"><span class="header-section-number">2.1.1</span> Data Source 1: GHE: Life tables</a></li>
+  <li><a href="#data-source-2-ghe-leading-causes-of-death" id="toc-data-source-2-ghe-leading-causes-of-death" class="nav-link" data-scroll-target="#data-source-2-ghe-leading-causes-of-death"><span class="header-section-number">2.1.2</span> Data Source 2: GHE: Leading causes of death</a></li>
+  </ul></li>
+  <li><a href="#research-plan" id="toc-research-plan" class="nav-link" data-scroll-target="#research-plan"><span class="header-section-number">2.2</span> <strong>Research plan</strong></a>
+  <ul class="collapse">
+  <li><a href="#data-source-1" id="toc-data-source-1" class="nav-link" data-scroll-target="#data-source-1"><span class="header-section-number">2.2.1</span> Data Source 1:</a></li>
+  <li><a href="#data-source-2-ghe-leading-causes-of-death-1" id="toc-data-source-2-ghe-leading-causes-of-death-1" class="nav-link" data-scroll-target="#data-source-2-ghe-leading-causes-of-death-1"><span class="header-section-number">2.2.2</span> Data Source 2: GHE: Leading causes of death</a></li>
+  </ul></li>
+  <li><a href="#missing-values-analysis" id="toc-missing-values-analysis" class="nav-link" data-scroll-target="#missing-values-analysis"><span class="header-section-number">2.3</span> Missing values analysis</a>
+  <ul class="collapse">
+  <li><a href="#data-source-1-1" id="toc-data-source-1-1" class="nav-link" data-scroll-target="#data-source-1-1"><span class="header-section-number">2.3.1</span> Data Source 1:</a></li>
+  <li><a href="#data-source-2-ghe-leading-causes-of-death-2" id="toc-data-source-2-ghe-leading-causes-of-death-2" class="nav-link" data-scroll-target="#data-source-2-ghe-leading-causes-of-death-2"><span class="header-section-number">2.3.2</span> Data Source 2: GHE: Leading causes of death</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/AmeliaJiang129/deathrate/edit/main/data.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/AmeliaJiang129/deathrate/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -167,13 +216,322 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="description" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="description"><span class="header-section-number">2.1</span> Description</h2>
+<section id="technical-description" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="technical-description"><span class="header-section-number">2.1</span> Technical description</h2>
+<section id="data-source-1-ghe-life-tables" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="data-source-1-ghe-life-tables"><span class="header-section-number">2.1.1</span> Data Source 1: GHE: Life tables</h3>
+<p>This dataset is collected and published by the World Health Organization. WHO collects time series of death registration data from as early as the 1950s for around 100 countries. This specific table publishes <a href="https://www.who.int/data/gho/data/indicators/indicator-details/GHO/gho-ghe-life-tables-by-who-region-global-health-estimates">annual period life tables for years 2000-2019</a>.</p>
+<p>The dataset can be downloaded as .cvs file and excel file. We chose the .cvs format for easier importing. It has 9310 rows and 34 columns. Among all Indicators in column 2, we are only interested in life expectancy and death rate, so we will only keep rows of these two indicators (ex - expectation of life at age x and nMx: age-specific death rate between ages x and x+n) and drop others. Looking at the columns, there are many duplicated items, such as value and the corresponding value code, and some redundant items such as variable type. Hence, we will only keep the following informative columns: Indicator, Location, Period (year), Dim1 (sex), Dim2 (age group), FactValueNumeric for analysis purpose. After the data cleaning, our dataset has 2660 rows and 6 rows.&nbsp;</p>
+<p>Indicator contains two values: ex - expectation of life at age x and nMx: age-specific death rate between ages x and x+n, which are the indicators we are interested in analyzing. Location contains Global, Africa, Americans, Eastern Mediterranean, Europe, South-East Asia, and Western Pacific. Period stores year of the observation. Dim1 is sex, which contains Male and Female. Dim2 represent age groups, which has value from &lt;1 year to 85+ years, with the interval of 5. FactValueNumeric is the value for indicators, which is in numeric format.</p>
 </section>
-<section id="missing-value-analysis" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="missing-value-analysis"><span class="header-section-number">2.2</span> Missing value analysis</h2>
+<section id="data-source-2-ghe-leading-causes-of-death" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="data-source-2-ghe-leading-causes-of-death"><span class="header-section-number">2.1.2</span> Data Source 2: GHE: Leading causes of death</h3>
+<p>WHO’s Global Health Estimates (GHE) provide the latest available data on <a href="https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-leading-causes-of-death">causes of death</a> globally, by region and country, and by age, sex and income group. They provide key insights on mortality and morbidity trends to support informed decision-making on health policy and resource allocation.</p>
+<p>These estimates are produced using data from multiple sources, including national vital registration data, latest estimates from WHO technical programmes, United Nations partners and inter-agency groups, as well as the Global Burden of Disease and other scientific studies. Before publishing, the GHE are reviewed by WHO Member States through consultation with national focal points and WHO country and regional offices.</p>
+<p>The update intervals of this database are not strictly uniform. The specific time panels it includes are: 2000, 2010, 2015, and 2019. It can be exported directly in xlsx format from the website. The main feature columns include: Age Group, Sex Group, Time, Region, and Cause Category. This table records the number of deaths attributed to various causes. It consists of 4 (# of time period) <span class="math inline">\(\times\)</span> 6 (# of regions) sheets, each containing a 215-row (# of causes) <span class="math inline">\(\times\)</span> 16-column (# of gender-age subgroups) dataset table.</p>
+<p>This dataset is an aggregate table of death counts, meaning that the recorded data is aggregated across different categorical dimensions rather than representing the raw records of individual deaths. This indicates that there is no single variable in this table, or in other words, the only numeric variable is the death count; all others are categorical variables. This implies that it will assist us in grouping data by different categories, facilitating the exploration of a comprehensible and insightful analysis of global health disparities, and allowing for targeted interventions in key areas.</p>
+<p>Please note that the divisions of age, time, gender and region, which are categorical variables with the same meanings, are consistent across both data tables. This ensures that we can obtain research outcomes based on a uniform standard.</p>
+</section>
+</section>
+<section id="research-plan" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="research-plan"><span class="header-section-number">2.2</span> <strong>Research plan</strong></h2>
+<section id="data-source-1" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="data-source-1"><span class="header-section-number">2.2.1</span> Data Source 1:</h3>
+<p><strong><em>How has the death rate and life expectancy changed over time, globally and regionally?</em></strong></p>
+<ul>
+<li>For the global overall trend, we will aggregate the data for each year and make a bar chart showing the death rate and life expectancy at birth from 2000 to 2019.</li>
+</ul>
+<p><strong><em>Does death rate and life expectancy differ by sex?</em></strong></p>
+<ul>
+<li>We will aggregate the data for each year by sex and make a side-by-side barchart to compare indicators for male and female, exploring whether there is a gap and whether the gap changes over time.</li>
+<li>We can also create mosaic plots to explore the interactions effects between age, sex, and target indicators.</li>
+</ul>
+<p><strong><em>Do more developed regions have lower death rate, higher life expectancy and larger changes than undeveloped regions?</em></strong></p>
+<ul>
+<li>We will aggregate the data for each region and make side-by-side bar charts to compare each region.</li>
+</ul>
+<p><strong><em>Do more developed regions have a more left skewed distribution of death rate on age?</em></strong></p>
+<ul>
+<li>First we aggregate the data for each region, and make a histogram of death rate on age groups.</li>
+<li>Since more developed regions will have more developed health care system, we expect a lower infant mortality and higher life expectancy at birth. So the death rate will be low when age is young, and higher when age is large.</li>
+</ul>
+</section>
+<section id="data-source-2-ghe-leading-causes-of-death-1" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="data-source-2-ghe-leading-causes-of-death-1"><span class="header-section-number">2.2.2</span> Data Source 2: GHE: Leading causes of death</h3>
+<p>Our research on data source 2 involves the following parts:</p>
+<section id="a.-temporal-analysis" class="level4" data-number="2.2.2.1">
+<h4 data-number="2.2.2.1" class="anchored" data-anchor-id="a.-temporal-analysis"><span class="header-section-number">2.2.2.1</span> <strong>a. Temporal Analysis</strong></h4>
+<ul>
+<li><p>For this part, we will examine temporal trends in causes of death over the past decade and identify regions or demographic groups experiencing significant changes in mortality rates.</p></li>
+<li><p><strong>Questions to be answered:</strong> Does the composition of causes of death change over time?</p></li>
+<li><p><strong>Methods to be implemented:</strong> line chart, Cleveland dot plot.</p></li>
+</ul>
+</section>
+<section id="b.-regional-age-and-gender-disparities" class="level4" data-number="2.2.2.2">
+<h4 data-number="2.2.2.2" class="anchored" data-anchor-id="b.-regional-age-and-gender-disparities"><span class="header-section-number">2.2.2.2</span> b. <strong>Regional, Age and Gender Disparities</strong></h4>
+<ul>
+<li><p>Analyze causes of death by continent, age groups and gender groups, emphasizing descriptive statistics to highlight regional variations. We will explore the influence of socio-economic factors on mortality rates and highlight any discernible patterns or disparities in mortality rates.</p></li>
+<li><p><strong>Questions to be answered:</strong> What causes death globally and regionally?How do the causes of death differ and appear to be similar across regions, and is this associated with development level? Are there any interaction effects between variables such as age and sex affect the causes of death?</p></li>
+<li><p><strong>Methods to be implemented:</strong> stacked bar chart for different categories, faceted geographic graphs, PCA analysis with biplot, Interaction effect analysis with Mosaic plot.</p></li>
+</ul>
+<p>By employing EDA and simple statistical tests, this research aims to offer a comprehensible and insightful analysis of global health disparities. The findings from this study can inform targeted public health strategies and contribute to ongoing efforts to improve health outcomes on a global scale.</p>
+</section>
+</section>
+</section>
+<section id="missing-values-analysis" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="missing-values-analysis"><span class="header-section-number">2.3</span> Missing values analysis</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="data-source-1-1" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="data-source-1-1"><span class="header-section-number">2.3.1</span> Data Source 1:</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">'dataset1.csv'</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Dimension</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Dimension of data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Dimension of data"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">dim</span>(data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9310   34</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Check Missing Value</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>missing <span class="ot">&lt;-</span> <span class="fu">colSums</span>(<span class="fu">is.na</span>(data))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>missing_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Column =</span> <span class="fu">names</span>(missing),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Missing_Values =</span> missing</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>missing_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                               Column Missing_Values
+IndicatorCode                           IndicatorCode              0
+Indicator                                   Indicator              0
+ValueType                                   ValueType              0
+ParentLocationCode                 ParentLocationCode              0
+ParentLocation                         ParentLocation              0
+Location.type                           Location.type              0
+SpatialDimValueCode               SpatialDimValueCode              0
+Location                                     Location              0
+Period.type                               Period.type              0
+Period                                         Period              0
+IsLatestYear                             IsLatestYear              0
+Dim1.type                                   Dim1.type              0
+Dim1                                             Dim1              0
+Dim1ValueCode                           Dim1ValueCode              0
+Dim2.type                                   Dim2.type              0
+Dim2                                             Dim2              0
+Dim2ValueCode                           Dim2ValueCode              0
+Dim3.type                                   Dim3.type           9310
+Dim3                                             Dim3           9310
+Dim3ValueCode                           Dim3ValueCode           9310
+DataSourceDimValueCode         DataSourceDimValueCode           9310
+DataSource                                 DataSource           9310
+FactValueNumericPrefix         FactValueNumericPrefix           9310
+FactValueNumeric                     FactValueNumeric              0
+FactValueUoM                             FactValueUoM           9310
+FactValueNumericLowPrefix   FactValueNumericLowPrefix           9310
+FactValueNumericLow               FactValueNumericLow           9310
+FactValueNumericHighPrefix FactValueNumericHighPrefix           9310
+FactValueNumericHigh             FactValueNumericHigh           9310
+Value                                           Value              0
+FactValueTranslationID         FactValueTranslationID           9310
+FactComments                             FactComments           9310
+Language                                     Language              0
+DateModified                             DateModified              0</code></pre>
+</div>
+</div>
+<p>Looking at the raw data, we can see that columns associated with Dim3, DataSourceDimValueCode, DataSource, FactValueNumericPrefix, FactValueUoM, FactValueNumericLowPrefix, FactValueNumericLow, FactValueNumericHighPrefix, FactValueNumericHigh are completely missing. This is because we only have two dimension categorical variables: sex and age group, and FactValueNumeric bears sufficient information for the indicator value. Therefore, we will remove those completely missing columns and one of the duplicated columns such as value/ValueCode and location/LocationCode.</p>
+<table class="table">
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Data Cleaning</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data[data<span class="sc">$</span>Indicator <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'nMx - age-specific death rate between ages x and x+n'</span>,<span class="st">'ex - expectation of life at age x'</span>), ]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data[ , <span class="fu">c</span>(<span class="st">'Indicator'</span>, <span class="st">'Location'</span>, <span class="st">'Period'</span>, <span class="st">'Dim1'</span>, <span class="st">'Dim2'</span>, <span class="st">'FactValueNumeric'</span>)]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimension</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Dimension of data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Dimension of data"</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">dim</span>(data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2660    6</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check missing values</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>missing_values <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">is.na</span>(data))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Number of missing values: "</span>, missing_values))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Number of missing values:  0"</code></pre>
+</div>
+</div>
+<p>After data cleaning, there is no missing value in this dataset, and we can further show this in an pie chart.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot to show </span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>missing_dummy <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="sc">!</span><span class="fu">is.na</span>(data))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the percentage of present and missing values</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>present_perc <span class="ot">&lt;-</span> <span class="fu">sum</span>(missing_dummy) <span class="sc">/</span> <span class="fu">length</span>(missing_dummy) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>missing_perc <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">-</span> present_perc</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a pie chart</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>pie_data <span class="ot">&lt;-</span> <span class="fu">c</span>(present_perc, missing_perc)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>pie_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Present"</span>, <span class="st">"Missing"</span>)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>label_perc <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"%1.1f%%"</span>, pie_data)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>labels_combined <span class="ot">&lt;-</span> <span class="fu">paste</span>(pie_labels, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>, label_perc)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a pie chart with labels</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="fu">pie</span>(pie_data, <span class="at">labels =</span> labels_combined,</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"#00AFBB"</span>, <span class="st">"#E7B800"</span>),</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="st">"Data Completeness"</span>,</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">cex.main =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="data-source-2-ghe-leading-causes-of-death-2" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="data-source-2-ghe-leading-causes-of-death-2"><span class="header-section-number">2.3.2</span> Data Source 2: GHE: Leading causes of death</h3>
+<p>There are four levels of variables on cause of death in our dataset. For example, the first level of causes includes three: (1) <strong>Communicable, maternal, perinatal and nutritional conditions</strong>, (2) <strong>Noncommunicable disease</strong>s, and (3) <strong>Injuries</strong>. The first-level causes can be expanded into multiple secondary causes. For example, <strong>Communicable, maternal, perinatal and nutritional conditions</strong> includes <strong>Infectious and parasitic diseases</strong>, <strong>Respiratory Infectious</strong>, and so on. By analogy, secondary causes include multiple 3rd-level causes, and 3rd-level causes include 4th-level causes, which are likely to be very rare fatal diseases.</p>
+<p>Based on this categorization, it can be assumed that the number of deaths due to the 1st-level causes is unlikely to be zero, as this is a very broad cause of death, with many categories underneath it. However, for a given 4th-level cause, there are likely to be multiple values of 0. For example, the number of deaths due to Trachoma is zero over the time period 2000 to 2019, and even if the range extends to global.</p>
+<p>Subject to the availability of data, when the number of deaths under a particular category is zero, it may be due to the fact that the official data do not capture this category of deaths, or it may be that there are indeed no deaths due to such causes. Here, we assume that our data sources are accurate, i.e., we believe the latter, and that there are indeed no deceased under this category. In this case, at this point, if the death_count is zero, it does not mean that the data is missing. Nevertheless, to account for this pattern in our dataset, we still counted the number of counts that were zero. That is, based on our assumptions, we converted the missing value analysis to an analysis of counts within subgroups that are zero.</p>
+<p>We plot the trend of a gradually increasing proportion of zeros as we move deeper into the level hierarchy in the figure below:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"ghecode2019.xlsx"</span>, <span class="at">sheet =</span> <span class="st">"Summary"</span>,<span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>df_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(df2,<span class="at">cols =</span> Global<span class="sc">:</span>WPR, <span class="at">names_to =</span> <span class="st">"region"</span>, <span class="at">values_to =</span> <span class="st">"death_num"</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> df_long <span class="sc">%&gt;%</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(region <span class="sc">!=</span> <span class="st">"Global"</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> filtered_data <span class="sc">%&gt;%</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">if_zero =</span> <span class="fu">ifelse</span>(death_num <span class="sc">==</span> <span class="dv">0</span>, <span class="st">'zero'</span>, <span class="st">'non-zero'</span>))</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(filtered_data, <span class="fu">aes</span>(<span class="at">x =</span> if_zero)) <span class="sc">+</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"count"</span>,<span class="at">fill=</span><span class="st">'cornflowerblue'</span>) <span class="sc">+</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Zero and Non-Zero Proportions on Different Levels of Death Cause Category"</span>,</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"If Zero"</span>,</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Count"</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>level,<span class="at">scales =</span> <span class="st">"free_y"</span>)<span class="sc">+</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Note that in this figure, although we used stat = “count” in the bar plot, we adjusted the scale of the y-axis to be free, to clearly compare zero and non-zero proportions. And it’s clear that as our we move deeper into the level hierarchy, the proportion of non-zeros is showing an increasing trend.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="st">"ghecode2019_1.xlsx"</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>df_2019 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (sheet_name <span class="cf">in</span> <span class="fu">excel_sheets</span>(file_path)) {</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  current_sheet <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path, <span class="at">sheet =</span> sheet_name)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  df_2019 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(df_2019, current_sheet)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>df_2019_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(df_2019,<span class="at">cols =</span> <span class="st">'0-28 days'</span><span class="sc">:</span><span class="st">'70+ years'</span>, <span class="at">names_to =</span> <span class="st">"age_group"</span>, <span class="at">values_to =</span> <span class="st">"death_num"</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>df_2019_long<span class="sc">$</span>age_group <span class="ot">&lt;-</span> <span class="fu">factor</span>(df_2019_long<span class="sc">$</span>age_group, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"0-28 days"</span>, <span class="st">"1-59 months"</span>, <span class="st">"5-14 years"</span>, <span class="st">"15-29 years"</span>, <span class="st">"30-49 years"</span>, <span class="st">"50-59 years"</span>, <span class="st">"60-69 years"</span>,<span class="st">"70+ years"</span>))</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_2019_long, <span class="fu">aes</span>(<span class="at">x =</span> region, <span class="at">y =</span> death_num, <span class="at">fill =</span> age_group)) <span class="sc">+</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>,) <span class="sc">+</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Death Count in Different Age and Regions for 2019"</span>,</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Region"</span>,</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Death Count"</span>,</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Age Group"</span>)<span class="sc">+</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>In the first graph above, we plotted grouped bars according to different regions. And the bars are stacked by counts in different age groups. Notice that although in some subgroups, the counts within the group are very small, they are not zero.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_2019_long, <span class="fu">aes</span>(<span class="at">x =</span> region, <span class="at">y =</span> death_num, <span class="at">fill =</span> age_group)) <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>,<span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> sex) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Death Count in Different Age, Sex and Regions for 2019"</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Region"</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Death Count"</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Age Group"</span>)<span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Transformation introduced infinite values in continuous y-axis</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>In the second graph above, we plot the statistics of deaths in subgroups that distinguish between gender and age in each region, using 2019 data as an example. Notice that at this level of disaggregation, there are still no subgroups with zero counts.</p>
+<p>As we can tell from the above graphs, there are indeed some very fine-faceted subgroups that have zero counts of death. For example, if we wanted to look at the number of females under the age of 5 who died in 2019 in Europe because of some rare 4th-level cause, it is possible that this value to be zero. However, at a more macro level of aggregation, the number of death counts within groups is not zero. This suggests that the data source we use is sufficient to allow us to identify some interesting trends, and in turn to draw some solid conclusions, on groups that are not faceted as that fine.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
