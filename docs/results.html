@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -61,6 +95,14 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.2/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
 
 
 </head>
@@ -138,7 +180,13 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#data-source-2" id="toc-data-source-2" class="nav-link active" data-scroll-target="#data-source-2"><span class="header-section-number">3.1</span> Data Source 2:</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/AmeliaJiang129/deathrate/edit/main/results.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/AmeliaJiang129/deathrate/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -160,8 +208,315 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<section id="data-source-2" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="data-source-2"><span class="header-section-number">3.1</span> Data Source 2:</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(redav)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'plotly'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:ggplot2':
+
+    last_plot</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:stats':
+
+    filter</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:graphics':
+
+    layout</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vcd)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: grid</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(colorspace)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read in data</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>file_path <span class="ot">&lt;-</span> <span class="st">"ghecode2019_cleaned_2.xlsx"</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>df_2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (sheet_name <span class="cf">in</span> <span class="fu">excel_sheets</span>(file_path)) {</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  current_sheet <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(file_path, <span class="at">sheet =</span> sheet_name)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  df_2 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(df_2, current_sheet)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>df_2<span class="sc">$</span>cause[df_2<span class="sc">$</span>cause <span class="sc">==</span> <span class="st">'Communicable, maternal, perinatal and nutritional conditions'</span>] <span class="ot">&lt;-</span> <span class="st">'Communicable &amp; Nutritional'</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>df_2<span class="sc">$</span>cause[df_2<span class="sc">$</span>cause <span class="sc">==</span> <span class="st">'Noncommunicable diseases'</span>] <span class="ot">&lt;-</span> <span class="st">'Noncommunicable'</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>df_2_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(df_2,<span class="at">cols =</span> <span class="st">'0-28 days'</span><span class="sc">:</span><span class="st">'70+ years'</span>, <span class="at">names_to =</span> <span class="st">"age_group"</span>, <span class="at">values_to =</span> <span class="st">"death_num"</span>)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>df_2_long<span class="sc">$</span>age_group <span class="ot">&lt;-</span> <span class="fu">factor</span>(df_2_long<span class="sc">$</span>age_group, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"0-28 days"</span>, <span class="st">"1-59 months"</span>, <span class="st">"5-14 years"</span>, <span class="st">"15-29 years"</span>, <span class="st">"30-49 years"</span>, <span class="st">"50-59 years"</span>, <span class="st">"60-69 years"</span>,<span class="st">"70+ years"</span>))</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>df_2_long<span class="sc">$</span>sex <span class="ot">&lt;-</span><span class="fu">factor</span>(df_2_long<span class="sc">$</span>sex, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Male"</span>,<span class="st">"Female"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Plot 1: Bar Chart- Temporal trend</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df_2_long_1<span class="ot">&lt;-</span>df_2_long <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(level <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>df_2_long_1<span class="sc">$</span>cause <span class="ot">&lt;-</span><span class="fu">factor</span>(df_2_long_1<span class="sc">$</span>cause, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Injuries"</span>,<span class="st">"Communicable &amp; Nutritional"</span>,<span class="st">"Noncommunicable"</span>))</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_2_long_1,<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> death_num, <span class="at">fill =</span> cause)) <span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Chart of Death Num"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Death Num"</span>) <span class="sc">+</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<p>Plot 2: Stacked Bar chart - temporal trend of different causes faceted on region</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_2_long_1<span class="ot">&lt;-</span>df_2_long <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(level <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>df_2_long_1<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">factor</span>(df_2_long_1<span class="sc">$</span>year, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"2019"</span>,<span class="st">"2015"</span>, <span class="st">"2010"</span>,<span class="st">"2000"</span>))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>df_2_long_1<span class="sc">$</span>region <span class="ot">&lt;-</span><span class="fu">factor</span>(df_2_long_1<span class="sc">$</span>region, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Wpr"</span>,<span class="st">"Sear"</span>,<span class="st">"Eur"</span>,<span class="st">'Afr'</span>,<span class="st">'Amr'</span>,<span class="st">'Emr'</span>))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>df_2_long_1<span class="sc">$</span>cause <span class="ot">&lt;-</span><span class="fu">factor</span>(df_2_long_1<span class="sc">$</span>cause, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Injuries"</span>,<span class="st">"Communicable &amp; Nutritional"</span>,<span class="st">"Noncommunicable"</span>))</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_2_long_1,<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> death_num, <span class="at">fill =</span> cause)) <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Chart of Death Num"</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Death Num"</span>) <span class="sc">+</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>region, <span class="at">ncol =</span> <span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<p>Plot 3: Stacked Bar chart - temporal trend of different causes faceted on sex</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>df_2_long_1<span class="ot">&lt;-</span>df_2_long <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(level <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>df_2_long_1<span class="sc">$</span>year <span class="ot">&lt;-</span><span class="fu">factor</span>(df_2_long_1<span class="sc">$</span>year, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"2019"</span>,<span class="st">"2015"</span>, <span class="st">"2010"</span>,<span class="st">"2000"</span>))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>df_2_long_1<span class="sc">$</span>region <span class="ot">&lt;-</span><span class="fu">factor</span>(df_2_long_1<span class="sc">$</span>region, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Wpr"</span>,<span class="st">"Sear"</span>,<span class="st">"Eur"</span>,<span class="st">'Afr'</span>,<span class="st">'Amr'</span>,<span class="st">'Emr'</span>))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>df_2_long_1<span class="sc">$</span>cause <span class="ot">&lt;-</span><span class="fu">factor</span>(df_2_long_1<span class="sc">$</span>cause, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Injuries"</span>,<span class="st">"Communicable &amp; Nutritional"</span>,<span class="st">"Noncommunicable"</span>))</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_2_long_1,<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> death_num, <span class="at">fill =</span> cause)) <span class="sc">+</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Stacked Bar Chart of Death Num"</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Death Num"</span>) <span class="sc">+</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>sex, <span class="at">ncol =</span> <span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
+<p>Plot 4: Mosaic plot- Interactions of the categorical variables of 2019</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df_2_long_2019<span class="ot">&lt;-</span>df_2_long <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2019</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设这三列不是因子或字符型，转换它们</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>df_2_long_2019<span class="sc">$</span>region <span class="ot">&lt;-</span><span class="fu">factor</span>(df_2_long_2019<span class="sc">$</span>region, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">'Afr'</span>,<span class="st">'Emr'</span>,<span class="st">"Sear"</span>,<span class="st">'Amr'</span>,<span class="st">"Wpr"</span>,<span class="st">"Eur"</span>))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>df_2_long_2019<span class="sc">$</span>age_group <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(df_2_long_2019<span class="sc">$</span>age_group)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>df_2_long_2019<span class="sc">$</span>sex <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(df_2_long_2019<span class="sc">$</span>sex)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>df_2_long_2019 <span class="ot">&lt;-</span> df_2_long_2019 <span class="sc">%&gt;%</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_group2 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"0-28 days"</span>, <span class="st">"1-59 months"</span>, <span class="st">"5-14 years"</span>) <span class="sc">~</span> <span class="st">"&lt;15"</span>,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"30-49 years"</span>, <span class="st">"15-29 years"</span>) <span class="sc">~</span> <span class="st">"15-49"</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"50-59 years"</span>, <span class="st">"60-69 years"</span>) <span class="sc">~</span> <span class="st">"50-69"</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"70+"</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df_2_long_2019)[<span class="fu">colnames</span>(df_2_long_2019) <span class="sc">==</span> <span class="st">"death_num"</span>] <span class="ot">&lt;-</span> <span class="st">"Freq"</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="fu">mosaic</span>(age_group2<span class="sc">~</span>region,<span class="at">data=</span>df_2_long_2019,<span class="at">highlighting_fill=</span><span class="fu">c</span>(<span class="st">"#F1F1F1"</span>,<span class="st">"#A7C6DD"</span>,<span class="st">"#7C7BB2"</span>,<span class="st">"#6B0077"</span>),<span class="at">direction=</span><span class="fu">c</span>(<span class="st">'v'</span>,<span class="st">'h'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mosaic</span>(sex<span class="sc">~</span>age_group2,<span class="at">data=</span>df_2_long_2019,<span class="at">highlighting_fill=</span><span class="fu">c</span>(<span class="st">"#A7C6DD"</span>,<span class="st">"#6B0077"</span>),<span class="at">direction=</span><span class="fu">c</span>(<span class="st">'v'</span>,<span class="st">'h'</span>,<span class="st">'h'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mosaic</span>(sex<span class="sc">~</span>region,<span class="at">data=</span>df_2_long_2019,<span class="at">highlighting_fill=</span><span class="fu">c</span>(<span class="st">"#A7C6DD"</span>,<span class="st">"#6B0077"</span>),<span class="at">direction=</span><span class="fu">c</span>(<span class="st">'v'</span>,<span class="st">'h'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Plot 5: Cleveland Dotplot- the main 2nd-lever causes and their distribution characteristics</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 筛选出所有code的字符串长度等于2位的数据，建立新表</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> df_2_long <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">nchar</span>(code) <span class="sc">==</span> <span class="dv">2</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> filtered_data <span class="sc">%&gt;%</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">father_cause =</span> <span class="fu">case_when</span>(</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">substr</span>(code, <span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">==</span> <span class="st">"1"</span> <span class="sc">~</span> <span class="st">'Communicable &amp; Nutritional'</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">substr</span>(code, <span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">==</span> <span class="st">"2"</span> <span class="sc">~</span> df_2_long<span class="sc">$</span>cause[df_2_long<span class="sc">$</span>code <span class="sc">==</span> <span class="st">"2"</span>][<span class="dv">1</span>],</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">substr</span>(code, <span class="dv">1</span>, <span class="dv">1</span>) <span class="sc">==</span> <span class="st">"3"</span> <span class="sc">~</span> df_2_long<span class="sc">$</span>cause[df_2_long<span class="sc">$</span>code <span class="sc">==</span> <span class="st">"3"</span>][<span class="dv">1</span>],</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TRUE ~ NA_character_</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="ot">&lt;-</span> filtered_data <span class="sc">%&gt;%</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_group2 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"0-28 days"</span>, <span class="st">"1-59 months"</span>, <span class="st">"5-14 years"</span>, <span class="st">"15-29 years"</span>) <span class="sc">~</span> <span class="st">"&lt;30 years"</span>,</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"30-49 years"</span>) <span class="sc">~</span> <span class="st">"30-49 years"</span>,</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"50-59 years"</span>, <span class="st">"60-69 years"</span>) <span class="sc">~</span> <span class="st">"50-69 years"</span>,</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"70+ years"</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>filtered_data<span class="sc">$</span>father_cause <span class="ot">&lt;-</span><span class="fu">factor</span>(filtered_data<span class="sc">$</span>father_cause, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Noncommunicable"</span>,<span class="st">"Communicable &amp; Nutritional"</span>,<span class="st">"Injuries"</span>))</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lattice)</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>filtered_data <span class="sc">%&gt;%</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cause,age_group2) <span class="sc">%&gt;%</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">death_sum =</span> <span class="fu">sum</span>(death_num)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>( <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(cause, death_sum), <span class="at">y =</span> death_sum, <span class="at">color =</span> age_group2)) <span class="sc">+</span></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="dv">0</span>), <span class="at">size =</span> <span class="fl">1.5</span> )<span class="sc">+</span></span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(father_cause <span class="sc">~</span> ., <span class="at">scales =</span> <span class="st">"free_y"</span>,<span class="at">space =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>()<span class="sc">+</span></span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Cleveland Dotplot"</span>,</span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Cause"</span>,</span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Death Number"</span>,</span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Father Cause"</span>) <span class="sc">+</span></span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">strip.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>,<span class="at">size=</span><span class="dv">8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Transformation introduced infinite values in continuous y-axis</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<p>Plot 6: PCA Analysis - similarity comparison across regions</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#PCA Analysis</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(level <span class="sc">==</span> <span class="dv">2</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2000</span> <span class="sc">|</span> year <span class="sc">==</span> <span class="dv">2019</span> )<span class="sc">%&gt;%</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age_group2 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"0-28 days"</span>, <span class="st">"1-59 months"</span>, <span class="st">"5-14 years"</span>, <span class="st">"15-29 years"</span>) <span class="sc">~</span> <span class="st">"&lt;30 years"</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"30-49 years"</span>) <span class="sc">~</span> <span class="st">"30-49 years"</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    age_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"50-59 years"</span>, <span class="st">"60-69 years"</span>) <span class="sc">~</span> <span class="st">"50-69 years"</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"70+ years"</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>age_group)<span class="sc">%&gt;%</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>sex)<span class="sc">%&gt;%</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>age_group2)</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered<span class="sc">$</span>region <span class="ot">&lt;-</span> <span class="fu">paste</span>(df_2_long_filtered<span class="sc">$</span>region, df_2_long_filtered<span class="sc">$</span>year, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span> year)</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>df_2_long_filtered <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cause,region) <span class="sc">%&gt;%</span></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">death_num =</span> <span class="fu">sum</span>(death_num))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'cause'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>df_2_shorter <span class="ot">&lt;-</span> df_2_long_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> cause,<span class="at">values_from =</span> death_num, <span class="at">values_fill=</span><span class="dv">0</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设 df 是你的数据框</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>constant_columns <span class="ot">&lt;-</span> <span class="fu">sapply</span>(df_2_shorter, <span class="cf">function</span>(col) <span class="fu">length</span>(<span class="fu">unique</span>(col)) <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>df_2_shorter <span class="ot">&lt;-</span> df_2_shorter[, <span class="sc">!</span>constant_columns]</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 用一个小的非零值替换零值</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>df_2_shorter[df_2_shorter <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="fl">1e-10</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA biplot</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>pca_plot<span class="ot">&lt;-</span> <span class="fu">draw_biplot</span>(df_2_shorter,<span class="at">point_size=</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>,<span class="dv">10</span>))<span class="sc">+</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">9</span>,<span class="dv">5</span>))<span class="sc">+</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">'PCA Analysis'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for x is already present.
+Adding another scale for x, which will replace the existing scale.
+Scale for y is already present.
+Adding another scale for y, which will replace the existing scale.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(pca_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-3fd33a1465e8fb863b0a" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-3fd33a1465e8fb863b0a">{"x":{"data":[{"x":[-4.9285787405733981,-3.9451659294313495,0.95496007637360569,4.2681388869390675,-2.4000750694435613,-1.6274399559189765,2.1800851790274143,4.4306123726450135,-3.6241475822941625,0.598947475147241,0.75738094782839893,3.3352823397007061],"y":[0.18578674067840809,-0.17363150837655095,1.907129062094574,-0.25304766351312469,4.1077832560864165,3.1686208397373679,1.1819732462297758,1.3379576505652793,-4.2342101314327882,-4.4068725156412869,-1.0492912230808269,-1.7721977533472435],"text":["PC1: -4.9285787<br />PC2:  0.1857867","PC1: -3.9451659<br />PC2: -0.1736315","PC1:  0.9549601<br />PC2:  1.9071291","PC1:  4.2681389<br />PC2: -0.2530477","PC1: -2.4000751<br />PC2:  4.1077833","PC1: -1.6274400<br />PC2:  3.1686208","PC1:  2.1800852<br />PC2:  1.1819732","PC1:  4.4306124<br />PC2:  1.3379577","PC1: -3.6241476<br />PC2: -4.2342101","PC1:  0.5989475<br />PC2: -4.4068725","PC1:  0.7573809<br />PC2: -1.0492912","PC1:  3.3352823<br />PC2: -1.7721978"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(100,149,237,1)","opacity":1,"size":3.7795275590551185,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(100,149,237,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-4.9285787405733981,-3.9451659294313495,0.95496007637360569,4.2681388869390675,-2.4000750694435613,-1.6274399559189765,2.1800851790274143,4.4306123726450135,-3.6241475822941625,0.598947475147241,0.75738094782839893,3.3352823397007061],"y":[-0.014213259321591926,-0.37363150837655096,1.707129062094574,-0.4530476635131247,3.9077832560864163,2.9686208397373677,0.98197324622977589,1.1379576505652793,-4.4342101314327884,-4.6068725156412871,-1.2492912230808269,-1.9721977533472435],"text":["Afr_2000","Afr_2019","Amr_2000","Amr_2019","Emr_2000","Emr_2019","Eur_2000","Eur_2019","Sear_2000","Sear_2019","Wpr_2000","Wpr_2019"],"hovertext":["PC1: -4.9285787<br />PC2:  0.1857867<br />label: Afr_2000","PC1: -3.9451659<br />PC2: -0.1736315<br />label: Afr_2019","PC1:  0.9549601<br />PC2:  1.9071291<br />label: Amr_2000","PC1:  4.2681389<br />PC2: -0.2530477<br />label: Amr_2019","PC1: -2.4000751<br />PC2:  4.1077833<br />label: Emr_2000","PC1: -1.6274400<br />PC2:  3.1686208<br />label: Emr_2019","PC1:  2.1800852<br />PC2:  1.1819732<br />label: Eur_2000","PC1:  4.4306124<br />PC2:  1.3379577<br />label: Eur_2019","PC1: -3.6241476<br />PC2: -4.2342101<br />label: Sear_2000","PC1:  0.5989475<br />PC2: -4.4068725<br />label: Sear_2019","PC1:  0.7573809<br />PC2: -1.0492912<br />label: Wpr_2000","PC1:  3.3352823<br />PC2: -1.7721978<br />label: Wpr_2019"],"textfont":{"size":11.338582677165356,"color":"rgba(100,149,237,1)"},"type":"scatter","mode":"text","hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0,2.719587304306323,null,0,-3.1476418204356031,null,0,1.1924054288948387,null,0,0.76514929189887526,null,0,1.7793514321449333,null,0,1.8125507369931533,null,0,-3.1117310222196934,null,0,0.48162940900225482,null,0,2.9793521974819321,null,0,-3.4426439282530428,null,0,3.2286418897739271,null,0,3.5570626168744095,null,0,-3.4084538747427335,null,0,3.4869026602419431,null,0,-2.752215655653131,null,0,3.2659767432954587,null,0,3.5054533502049199,null,0,-2.5747168197368291,null,0,1.2101121288334491,null,0,3.0825613860789547,null,0,1.6920528961814205,null,0,-3.546837154469284,null,0,-0.29247186063618702],"y":[0,-2.1643236829850547,null,0,-2.4965096210339097,null,0,-3.8214176559763904,null,0,-4.5973159760097086,null,0,-0.15171937264145305,null,0,-3.8442430739809685,null,0,-2.3235857659365213,null,0,-3.705602364762282,null,0,-1.7726845247672078,null,0,-1.4423637246919654,null,0,-0.24638557177751325,null,0,-2.0265329784318586,null,0,-2.1611605530913884,null,0,-1.3124711794891273,null,0,-2.4103836348921504,null,0,0.56453472623871237,null,0,0.58817961383272077,null,0,-3.1390849319883247,null,0,-3.8507089722457022,null,0,0.43315611005774446,null,0,-4.1233048738753935,null,0,-1.0605870918302442,null,0,-4.590333707247888],"text":["x: 0<br />y: 0<br />xend * mult:  2.7195873<br />yend * mult: -2.1643237<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  2.7195873<br />yend * mult: -2.1643237<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult: -3.1476418<br />yend * mult: -2.4965096<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult: -3.1476418<br />yend * mult: -2.4965096<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult:  1.1924054<br />yend * mult: -3.8214177<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  1.1924054<br />yend * mult: -3.8214177<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult:  0.7651493<br />yend * mult: -4.5973160<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  0.7651493<br />yend * mult: -4.5973160<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult:  1.7793514<br />yend * mult: -0.1517194<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  1.7793514<br />yend * mult: -0.1517194<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult:  1.8125507<br />yend * mult: -3.8442431<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  1.8125507<br />yend * mult: -3.8442431<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult: -3.1117310<br />yend * mult: -2.3235858<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult: -3.1117310<br />yend * mult: -2.3235858<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult:  0.4816294<br />yend * mult: -3.7056024<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  0.4816294<br />yend * mult: -3.7056024<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult:  2.9793522<br />yend * mult: -1.7726845<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  2.9793522<br />yend * mult: -1.7726845<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult: -3.4426439<br />yend * mult: -1.4423637<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult: -3.4426439<br />yend * mult: -1.4423637<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult:  3.2286419<br />yend * mult: -0.2463856<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  3.2286419<br />yend * mult: -0.2463856<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult:  3.5570626<br />yend * mult: -2.0265330<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  3.5570626<br />yend * mult: -2.0265330<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult: -3.4084539<br />yend * mult: -2.1611606<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult: -3.4084539<br />yend * mult: -2.1611606<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult:  3.4869027<br />yend * mult: -1.3124712<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  3.4869027<br />yend * mult: -1.3124712<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult: -2.7522157<br />yend * mult: -2.4103836<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult: -2.7522157<br />yend * mult: -2.4103836<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult:  3.2659767<br />yend * mult:  0.5645347<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  3.2659767<br />yend * mult:  0.5645347<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult:  3.5054534<br />yend * mult:  0.5881796<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  3.5054534<br />yend * mult:  0.5881796<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult: -2.5747168<br />yend * mult: -3.1390849<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult: -2.5747168<br />yend * mult: -3.1390849<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult:  1.2101121<br />yend * mult: -3.8507090<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  1.2101121<br />yend * mult: -3.8507090<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult:  3.0825614<br />yend * mult:  0.4331561<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  3.0825614<br />yend * mult:  0.4331561<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult:  1.6920529<br />yend * mult: -4.1233049<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult:  1.6920529<br />yend * mult: -4.1233049<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult: -3.5468372<br />yend * mult: -1.0605871<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult: -3.5468372<br />yend * mult: -1.0605871<br />highlight: FALSE",null,"x: 0<br />y: 0<br />xend * mult: -0.2924719<br />yend * mult: -4.5903337<br />highlight: FALSE","x: 0<br />y: 0<br />xend * mult: -0.2924719<br />yend * mult: -4.5903337<br />highlight: FALSE"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(102,102,102,1)","dash":"solid"},"hoveron":"points","name":"FALSE","legendgroup":"FALSE","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[2.8011749234355126,-3.2420710750486714,1.228177591761684,0.78810377065584158,1.8327319751092814,1.866927259102948,-3.2050829528862845,0.49607829127232245,3.0687327634063903,-3.5459232461006343,3.3255011464671451,3.6637744953806419,-3.5107074909850158,3.5915097400492013,-2.8347821253227248,3.3639560455943225,3.6106169507110675,-2.651958324328934,1.2464154926984525,3.1750382276613234,1.7428144830668633,-3.6532422691033628,-0.30124601645527266],"y":[-2.2292533934746066,-2.5714049096649272,-3.9360601856556823,-4.7352354552899998,-0.15627095382069664,-3.9595703662003978,-2.3932933389146172,-3.8167704357051506,-1.825865060510224,-1.4856346364327244,-0.25377713893083864,-2.0873289677848144,-2.2259953696841301,-1.3518453148738012,-2.4826951439389151,0.58147076802587372,0.60582500224770242,-3.2332574799479747,-3.9662302414130735,0.44615079335947683,-4.247004020091655,-1.0924047045851517,-4.728043718465325],"text":["Cardiovascular diseases","Congenital anomalies","Diabetes mellitus","Digestive diseases","Endocrine, blood, immune disorders","Genitourinary diseases","Infectious and parasitic diseases","Intentional injuries","Malignant neoplasms","Maternal conditions","Mental and substance use disorders","Musculoskeletal diseases","Neonatal conditions","Neurological conditions","Nutritional deficiencies","Oral conditions","Other neoplasms","Respiratory Infectious","Respiratory diseases","Sense organ diseases","Skin diseases","Sudden infant death syndrome","Unintentional injuries"],"hovertext":["xend * mult * 1.03:  2.8011749<br />yend * mult * 1.03: -2.2292534<br />label: Cardiovascular diseases<br />angle: -38.513756<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03: -3.2420711<br />yend * mult * 1.03: -2.5714049<br />label: Congenital anomalies<br />angle:  38.419218<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 1","xend * mult * 1.03:  1.2281776<br />yend * mult * 1.03: -3.9360602<br />label: Diabetes mellitus<br />angle: -72.670396<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03:  0.7881038<br />yend * mult * 1.03: -4.7352355<br />label: Digestive diseases<br />angle: -80.550654<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03:  1.8327320<br />yend * mult * 1.03: -0.1562710<br />label: Endocrine, blood, immune disorders<br />angle:  -4.873632<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03:  1.8669273<br />yend * mult * 1.03: -3.9595704<br />label: Genitourinary diseases<br />angle: -64.756243<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03: -3.2050830<br />yend * mult * 1.03: -2.3932933<br />label: Infectious and parasitic diseases<br />angle:  36.749362<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 1","xend * mult * 1.03:  0.4960783<br />yend * mult * 1.03: -3.8167704<br />label: Intentional injuries<br />angle: -82.594592<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03:  3.0687328<br />yend * mult * 1.03: -1.8258651<br />label: Malignant neoplasms<br />angle: -30.752219<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03: -3.5459232<br />yend * mult * 1.03: -1.4856346<br />label: Maternal conditions<br />angle:  22.732210<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 1","xend * mult * 1.03:  3.3255011<br />yend * mult * 1.03: -0.2537771<br />label: Mental and substance use disorders<br />angle:  -4.363923<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03:  3.6637745<br />yend * mult * 1.03: -2.0873290<br />label: Musculoskeletal diseases<br />angle: -29.671070<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03: -3.5107075<br />yend * mult * 1.03: -2.2259954<br />label: Neonatal conditions<br />angle:  32.377105<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 1","xend * mult * 1.03:  3.5915097<br />yend * mult * 1.03: -1.3518453<br />label: Neurological conditions<br />angle: -20.626352<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03: -2.8347821<br />yend * mult * 1.03: -2.4826951<br />label: Nutritional deficiencies<br />angle:  41.211795<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 1","xend * mult * 1.03:  3.3639560<br />yend * mult * 1.03:  0.5814708<br />label: Oral conditions<br />angle:   9.806858<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03:  3.6106170<br />yend * mult * 1.03:  0.6058250<br />label: Other neoplasms<br />angle:   9.524927<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03: -2.6519583<br />yend * mult * 1.03: -3.2332575<br />label: Respiratory Infectious<br />angle:  50.640967<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 1","xend * mult * 1.03:  1.2464155<br />yend * mult * 1.03: -3.9662302<br />label: Respiratory diseases<br />angle: -72.554311<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03:  3.1750382<br />yend * mult * 1.03:  0.4461508<br />label: Sense organ diseases<br />angle:   7.998731<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03:  1.7428145<br />yend * mult * 1.03: -4.2470040<br />label: Skin diseases<br />angle: -67.688554<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 0","xend * mult * 1.03: -3.6532423<br />yend * mult * 1.03: -1.0924047<br />label: Sudden infant death syndrome<br />angle:  16.647892<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 1","xend * mult * 1.03: -0.3012460<br />yend * mult * 1.03: -4.7280437<br />label: Unintentional injuries<br />angle:  86.354343<br />highlight: FALSE<br />-0.5 * sign(xend) + 0.5: 1"],"textfont":{"size":11.338582677165356,"color":"rgba(102,102,102,1)"},"type":"scatter","mode":"text","hoveron":"points","name":"FALSE","legendgroup":"FALSE","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":40.182648401826498,"l":37.260273972602747},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"PCA Analysis","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-11,11],"tickmode":"array","ticktext":["-10","-5","0","5","10"],"tickvals":[-10,-5,0,5,10],"categoryorder":"array","categoryarray":["-10","-5","0","5","10"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"PC 1 (46.2%)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"scaleanchor":"y","scaleratio":1,"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-9.6999999999999993,5.7000000000000002],"tickmode":"array","ticktext":["-5","0","5"],"tickvals":[-5,0,5],"categoryorder":"array","categoryarray":["-5","0","5"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"PC 2 (29.8%)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"scaleanchor":"x","scaleratio":1,"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"66195f8d42a2":{"x":{},"y":{},"type":"scatter"},"66193311cab0":{"x":{},"y":{},"label":{}},"661955120301":{"x":{},"y":{},"xend":{},"yend":{},"colour":{}},"661911836249":{"x":{},"y":{},"label":{},"angle":{},"colour":{},"hjust":{}}},"cur_data":"66195f8d42a2","visdat":{"66195f8d42a2":["function (y) ","x"],"66193311cab0":["function (y) ","x"],"661955120301":["function (y) ","x"],"661911836249":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -417,7 +772,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/AmeliaJiang129/deathrate/edit/main/results.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/AmeliaJiang129/deathrate/issues/new" class="toc-action">Report an issue</a></p></div></div></div>
+    </div>
     <div class="nav-footer-right">This book was built with <a href="https://quarto.org/">Quarto</a>.</div>
   </div>
 </footer>
