@@ -2,7 +2,7 @@
 
 ## Technical description
 
-### Data Source 1: GHE: Life tables
+### Data Source 1:
 
 This dataset is collected and published by the World Health Organization. WHO collects time series of death registration data from as early as the 1950s for around 100 countries. This specific table publishes [annual period life tables for years 2000-2019](https://www.who.int/data/gho/data/indicators/indicator-details/GHO/gho-ghe-life-tables-by-who-region-global-health-estimates).
 
@@ -22,7 +22,7 @@ Please note that the divisions of age, time, gender and region, which are catego
 
 ## **Research plan**
 
-### Data Source 1: GHE: Life tables
+### Data Source 1:
 
 How has the death rate and life expectancy changed over time, globally and regionally?
 
@@ -56,7 +56,7 @@ Our research on data source 2 involves the following parts:
 
 -   Analyze causes of death by continent, age groups and gender groups, emphasizing descriptive statistics to highlight regional variations. We will explore the influence of socio-economic factors on mortality rates and highlight any discernible patterns or disparities in mortality rates.
 
--   **Questions to be answered:** What causes death globally and regionally?How do the causes of death differ and appear to be similar across regions, and is this associated with development level? Are there any interaction effects between variables such as age and sex affect the causes of death?
+-   **Questions to be answered:** What causes death globally and regionally? How do the causes of death differ and appear to be similar across regions, and is this associated with development level? Are there any interaction effects between variables such as age and sex affect the causes of death?
 
 -   **Methods to be implemented:** stacked bar chart for different categories, faceted geographic graphs, PCA analysis with biplot, Interaction effect analysis with Mosaic plot.
 
@@ -71,7 +71,7 @@ library(dplyr)
 library(ggplot2)
 ```
 
-### Data Source 1: GHE: Life tables
+### Data Source 1: 
 
 ```{r}
 data <- read.csv('dataset1.csv')
