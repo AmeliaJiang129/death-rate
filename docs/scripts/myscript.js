@@ -1,6 +1,6 @@
 // add your JavaScript/D3 to this file
 // Load data from CSV file
-d3.csv("https://raw.githubusercontent.com/AmeliaJiang129/deathrate/main/d3_clean.csv").then(function(data) {
+d3.csv("https://raw.githubusercontent.com/AmeliaJiang129/deathrate/main/data/clean/d3_clean.csv").then(function(data) {
   data.forEach(function(d) {
     d.Year = +d.Year;
     d.AverageDeathRate = +d.AverageDeathRate;
