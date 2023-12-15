@@ -2,7 +2,7 @@
 
 ## Technical description
 
-### Data Source 1:
+### Data Source 1: GHE: Life table
 
 This dataset is collected and published by the World Health Organization. WHO collects time series of death registration data from as early as the 1950s for around 100 countries. This specific table publishes [annual period life tables for years 2000-2019](https://www.who.int/data/gho/data/indicators/indicator-details/GHO/gho-ghe-life-tables-by-who-region-global-health-estimates).
 
@@ -24,7 +24,7 @@ Please note that the divisions of age, time, gender and region, which are catego
 
 ## **Research plan**
 
-### Data Source 1:
+### Data Source 1: GHE: Life table
 
 ***How has the death rate and life expectancy changed over time, globally and regionally?***
 
@@ -75,8 +75,7 @@ library(dplyr)
 library(ggplot2)
 ```
 
-### Data Source 1:
-
+### Data Source 1: GHE: Life table
 
 ```{r}
 data <- read.csv('data/clean/dataset1.csv')
@@ -218,3 +217,5 @@ ggplot(df_2019_long, aes(x = region, y = death_num, fill = age_group)) +
 In the second graph above, we plot the statistics of deaths in subgroups that distinguish between gender and age in each region, using 2019 data as an example. Notice that at this level of disaggregation, there are still no subgroups with zero counts.
 
 As we can tell from the above graphs, there are indeed some very fine-faceted subgroups that have zero counts of death. For example, if we wanted to look at the number of females under the age of 5 who died in 2019 in Europe because of some rare 4th-level cause, it is possible that this value to be zero. However, at a more macro level of aggregation, the number of death counts within groups is not zero. This suggests that the data source we use is sufficient to allow us to identify some interesting trends, and in turn to draw some solid conclusions, on groups that are not faceted as that fine.
+
+Note: The dataframe for data source 2 has been preprocessed in python. The code used for data preprocessing is [here](https://github.com/AmeliaJiang129/deathrate/blob/main/Data%20Preprocessing%20Code/Data%20Preprocessing.ipynb).
