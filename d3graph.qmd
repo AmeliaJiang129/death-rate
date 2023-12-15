@@ -1,12 +1,14 @@
 # Interactive graph
 
-### Instruction on How to Read the Graph
+## Instruction on How to Read the Graph
 
 Here is an interactive side-to-side bar chart of death rate of each region over years. In the result section, we observed that there is a decreasing trend in death rate in all regions, especially in Africa. However, bars far from the y-axis are hard to read, and we can only examine the change in death rate by eyes.
 
 Therefore, in this interactive graph, when we move the mouse on the bars, it will show the corresponding year, region, average death rate of the region in that year, and percentage change of death rate of the region from last year. It allows readers better read the graph and get to know specific numbers interactively.
 
 Note: since 2000 is the first year of data, it has zero percentage change in death rate.
+
+## Graph
 
 ```{=html}
 <style>
