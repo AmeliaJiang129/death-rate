@@ -104,9 +104,9 @@ d3.csv("https://raw.githubusercontent.com/AmeliaJiang129/deathrate/main/data/cle
           : 0;
 
       tooltip.html(`<strong>Year:</strong> ${d.Year}<br>
-                    <strong>Location:</strong> ${d.Location}<br>
-                    <strong>AverageDeathRate:</strong> ${currentYearDeathRate.toFixed(4)}<br>
-                    <strong>Percentage Change:</strong> ${percentageChange.toFixed(2)}%`)
+                    <strong>Region:</strong> ${d.Location}<br>
+                    <strong>Average Death Rate:</strong> ${currentYearDeathRate.toFixed(4)}<br>
+                    <strong>Percentage Change in Death Rate:</strong> ${percentageChange.toFixed(2)}%`)
           .style('visibility', 'visible');
   }
 
