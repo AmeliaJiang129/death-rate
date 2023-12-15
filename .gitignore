@@ -4,4 +4,8 @@
 .Ruserdata
 /.quarto/
 dataset1.csv
+<<<<<<< Updated upstream
 practice.html
+=======
+practice2.html
+>>>>>>> Stashed changes
