@@ -15,6 +15,12 @@ library(plotly)
 library(tidyverse)
 library(hexbin)
 library(RColorBrewer)
+library(readxl)
+library(tidyr)
+library(dplyr)
+library(redav)
+library(vcd)
+library(colorspace)
 ```
 
 ### General Trend of Death Rate and Life Expectancy Over Time
@@ -202,18 +208,7 @@ Overall, death rate is closely related to the establishment of the health care s
 
 ## Data Source 2:
 
-```{r,fig.height=5.5,fig.width=8}
-
-library(readxl)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-library(dplyr)
-#library(redav)
-library(plotly)
-library(vcd)
-library(colorspace)
-```
+### General Trend for Death Number Over Time
 
 ```{r}
 # Read data from excel
@@ -232,8 +227,6 @@ df_2_long$age_group <- factor(df_2_long$age_group, levels = c("0-28 days", "1-59
 df_2_long$sex <-factor(df_2_long$sex, levels = c("Male","Female"))
 ```
 
-First, we analyze the change over time in the number of deaths of different causes on a global scale. It is noted that there is an upward trend in the number of deaths globally as a whole. In particular, deaths from non-communicable diseases are the main source of the rise in the number of deaths from all factors, while deaths from communicable diseases and problems such as malnutrition show a downward trend. The overall number of casualties is relatively stable and hardly changes over time.
-
 ```{r,fig.height=5.5,fig.width=10}
 
 df_2_long_1<-df_2_long %>%
@@ -243,14 +236,15 @@ df_2_long_1$cause <-factor(df_2_long_1$cause, levels = c("Injuries","Communicabl
 
 ggplot(df_2_long_1,aes(x = year, y = death_num, fill = cause)) +
   geom_bar(stat = "identity") +
-  labs(title = "Stacked Bar Chart of Death Num",
+  scale_fill_brewer(palette="Paired") +
+  labs(title = "Global Deaths Continue to Rise, with a Rising Share of Noncommunicable Factors",
        x = "Year",
        y = "Death Num") +
   theme_minimal()
 
 ```
 
-In terms of specific regions, Wpr and Sear had the highest number of deaths, while Amr and Emr had the lowest. In terms of changes in the number of deaths by region, Wpr, Emr and Amr show an upward trend, Afr shows a downward trend, and Sear and Eur remain more or less unchanged. For Wpr, Emr and Amr, where the number of deaths increased, noncommunicable disease was the most important source of increase. For Afr, where the overall number of deaths has declined, it is noted that a significant decline in deaths due to infectious diseases and malnutrition is the main reason for the overall decline, which even outweighs the rise in noncommunicable factors, resulting in a downward trend in the overall number of deaths.
+First, we analyze the change over time in the number of deaths of different causes on a global scale. It is noted that there is an upward trend in the number of deaths globally as a whole. In particular, deaths from non-communicable diseases are the main source of the rise in the number of deaths from all factors, while deaths from communicable diseases and problems such as malnutrition show a downward trend. The overall number of casualties is relatively stable and hardly changes over time.
 
 ```{r,fig.height=10,fig.width=10}
 
@@ -262,7 +256,8 @@ df_2_long_1$cause <-factor(df_2_long_1$cause, levels = c("Injuries","Communicabl
 
 ggplot(df_2_long_1,aes(x = year, y = death_num, fill = cause)) +
   geom_bar(stat = "identity") +
-  labs(title = "Stacked Bar Chart of Death Num",
+  scale_fill_brewer(palette="Paired") +
+  labs(title = "Trends in Death Number Vary by Region, with Different Main Causes",
        x = "Year",
        y = "Death Num") +
   facet_wrap(~region, ncol = 1)+
@@ -270,8 +265,9 @@ ggplot(df_2_long_1,aes(x = year, y = death_num, fill = cause)) +
   theme_minimal()
 
 ```
+In the labels above, Afr is short for African Region, Amr is short for Region of the Americas, Sear is short for South-East Asia Region, Eur is short for European Region, Emr is short for Eastern Mediterranean Region, and Wpr is short for Western Pacific Region. We will also use these abbreviations in the following analysis.
 
-By gender, the overall number of deaths is higher for males than for females, and both show an upward trend over time. It is noted that for both gender groups, the number of deaths from noncommunicable disease is increasing, and the number of deaths from both communicable and nutritional causes is decreasing. It is also noteworthy that there are significantly more deaths from injuries and noncommunicable disease among males than females.
+In terms of specific regions, Wpr and Sear had the highest number of deaths, while Amr and Emr had the lowest. In terms of changes in the number of deaths by region, Wpr, Emr and Amr show an upward trend, Afr shows a downward trend, and Sear and Eur remain more or less unchanged. For Wpr, Emr and Amr, where the number of deaths increased, noncommunicable disease was the most important source of increase. For Afr, where the overall number of deaths has declined, it is noted that a significant decline in deaths due to infectious diseases and malnutrition is the main reason for the overall decline, which even outweighs the rise in noncommunicable factors, resulting in a downward trend in the overall number of deaths.
 
 ```{r,fig.height=8,fig.width=8}
 
@@ -283,7 +279,8 @@ df_2_long_1$cause <-factor(df_2_long_1$cause, levels = c("Injuries","Communicabl
 
 ggplot(df_2_long_1,aes(x = year, y = death_num, fill = cause)) +
   geom_bar(stat = "identity") +
-  labs(title = "Stacked Bar Chart of Death Num",
+  scale_fill_brewer(palette="Paired") +
+  labs(title = "Trends in Death Number Faceted on Sex",
        x = "Year",
        y = "Death Num") +
   facet_wrap(~sex, ncol = 1)+
@@ -292,9 +289,9 @@ ggplot(df_2_long_1,aes(x = year, y = death_num, fill = cause)) +
 
 ```
 
-The following analysis of the 2019 data analyzes whether there is an interaction relationship between the number of deaths in different regions, ages, and sexes.
+By gender, the overall number of deaths is higher for males than for females, and both show an upward trend over time. It is noted that for both gender groups, the number of deaths from noncommunicable disease is increasing, and the number of deaths from both communicable and nutritional causes is decreasing. It is also noteworthy that there are significantly more deaths from injuries and noncommunicable disease among males than females.
 
-First note that the age composition of deaths is characterized differently across region. Afr and Emr have more young people in their death cohorts. Especially for Afr, the number of deaths under 15 accounts for almost half of the overall number of deaths, which may be related to the health care conditions in the region. For Amr, Wpr and Eur, on the other hand, the age group over 69 accounted for the majority of the overall number of deaths.
+### Interactive Distribution between Age, Region, Gender and Death Cause Groups
 
 ```{r}
 
@@ -321,7 +318,9 @@ mosaic(age_group2~region,data=df_2_long_2019,highlighting_fill=c("#F1F1F1","#A7C
 
 ```
 
-It is also noted that the age distribution within the groups of people who died due to different causes varies. The adolescent group accounts for a larger proportion of deaths due to infectious diseases and malnutrition, while the 70+ age group accounts for a larger proportion of deaths due to noncommunicable diseases. Deaths from accidental injuries and deaths are almost evenly distributed across age groups.
+The following analysis of the 2019 data analyzes whether there is an interaction relationship between the number of deaths in different regions, ages, and sexes.
+
+First note that the age composition of deaths is characterized differently across region. Afr and Emr have more young people in their death cohorts. Especially for Afr, the number of deaths under 15 accounts for almost half of the overall number of deaths, which may be related to the health care conditions in the region. For Amr, Wpr and Eur, on the other hand, the age group over 69 accounted for the majority of the overall number of deaths.
 
 ```{r,fig.height=6,fig.width=6}
 mosaic(age_group2 ~ cause,
@@ -333,7 +332,7 @@ mosaic(age_group2 ~ cause,
 
 ```
 
-The gender distribution is almost even across age and regional divisions.
+It is also noted that the age distribution within the groups of people who died due to different causes varies. The adolescent group accounts for a larger proportion of deaths due to infectious diseases and malnutrition, while the 70+ age group accounts for a larger proportion of deaths due to noncommunicable diseases. Deaths from accidental injuries and deaths are almost evenly distributed across age groups.
 
 ```{r}
 mosaic(sex~age_group2,data=df_2_long_2019,highlighting_fill=c("#A7C6DD","#6B0077"),direction=c('v','h','h'))
@@ -341,15 +340,13 @@ mosaic(sex~region,data=df_2_long_2019,highlighting_fill=c("#A7C6DD","#6B0077"),d
 
 ```
 
-Below, we analyze the causes of death more specifically. In the above analysis, we simply categorized the causes of death into three main categories-communicable & nutritional, noncommunicable, and injuries-and now we will break them down more closely to find the major causes of death in each category.
+The gender distribution is almost even across age and regional divisions.
 
-Among noncommunicable diseases, Cardiovascular diseases, Malignant neoplasms and Respiratory diseases are the top 3 causes for death. Among communicable & nutritional reasons, Infectious diseases are the top 3 causes for death. Among communicable & nutritional reasons, Infectious and parasitic diseases, Neonatal conditions and Respiratory Infectious are the top 3 causes for death. For injuries, unintentional diseases are the top 3 causes. For injuries, unintentional injuries and deaths account for a higher proportion of deaths and injuries than intentional injuries and deaths.
-
-Also note that the percentage of age in the different factors varies, an observation that is the same as the mosaic plot findings above.
+### A More Nuanced Division of Causes
 
 ```{r,fig.height=8,fig.width=10}
 
-# 筛选出所有code的字符串长度等于2位的数据，建立新表
+# Filter all the 2nd-level causes
 filtered_data <- df_2_long %>%
   filter(nchar(code) == 2)
 
@@ -380,7 +377,7 @@ filtered_data %>%
   facet_grid(father_cause ~ ., scales = "free_y",space = "free_y") +
   coord_flip() +
   scale_y_log10()+
-  labs(title = "Cleveland Dotplot - Main 2nd-level Causes and Difference on Age Groups",
+  labs(title = "Cleveland Dotplot - Main 2nd-level Causes and Differences on Age Groups",
        x = "Cause",
        y = "Death Number",
        color = "Age Group")+
@@ -389,7 +386,11 @@ filtered_data %>%
 
 ```
 
-Among the differences in the regional distribution of the different factors, it is noted that Sear, Eur and Wpr contribute the highest number of deaths in noncommunicable causes, while Afr and Sear have a larger share of the dead in communicable as well as nutritional causes.
+Below, we analyze the causes of death more specifically. In the above analysis, we simply categorized the causes of death into three main categories-communicable & nutritional, noncommunicable, and injuries-and now we will break them down more closely to find the major causes of death in each category.
+
+Among noncommunicable diseases, Cardiovascular diseases, Malignant neoplasms and Respiratory diseases are the top 3 causes for death. Among communicable & nutritional reasons, Infectious diseases are the top 3 causes for death. Among communicable & nutritional reasons, Infectious and parasitic diseases, Neonatal conditions and Respiratory Infectious are the top 3 causes for death. For injuries, unintentional diseases are the top 3 causes. For injuries, unintentional injuries and deaths account for a higher proportion of deaths and injuries than intentional injuries and deaths.
+
+Also note that the percentage of age in the different factors varies, an observation that is the same as the mosaic plot findings above.
 
 ```{r,fig.height=8,fig.width=10}
 filtered_data %>%
@@ -400,7 +401,7 @@ filtered_data %>%
   facet_grid(father_cause ~ ., scales = "free_y",space = "free_y") +
   coord_flip() +
   scale_y_log10()+
-  labs(title = "Cleveland Dotplot - Main 2nd-level Causes and Difference on Regions",
+  labs(title = "Cleveland Dotplot - Main 2nd-level Causes and Differences on Regions",
        x = "Cause",
        y = "Death Number",
        color = "Region") +
@@ -408,9 +409,9 @@ filtered_data %>%
   theme(strip.text.y = element_text(angle = 90, hjust = 0.5,size=9))
 ```
 
-Finally, we will analyze the similarity of the distribution of causes of death in different geographic areas, with method Pricipal Component Analysis (PCA).
+Among the differences in the regional distribution of the different factors, it is noted that Sear, Eur and Wpr contribute the highest number of deaths in noncommunicable causes, while Afr and Sear have a larger share of the dead in communicable as well as nutritional causes.
 
-Firstly, according to the data of 2019, Eur, Amr and Emr are more similar in the characteristics of the distribution of causes of death, with a lower number of deaths in all three major categories of causes.Wpr has more deaths due to noncommunicable diseases, Sear has more deaths due to injuries, and Afr has more deaths due to Communicable and nutritional diseases.
+### Comparison of the Distribution of Causes of Death by Region - Analysis of Similarities and Differences
 
 ```{r}
 
@@ -440,10 +441,9 @@ df_2_long_filtered <- df_2_long_filtered %>%
 df_2_shorter <- df_2_long_filtered %>%
   pivot_wider(names_from = cause,values_from = death_num, values_fill=0)
 
-# 假设 df 是你的数据框
 constant_columns <- sapply(df_2_shorter, function(col) length(unique(col)) == 1)
 df_2_shorter <- df_2_shorter[, !constant_columns]
-# 用一个小的非零值替换零值
+# Replace 0 with a very small number
 df_2_shorter[df_2_shorter == 0] <- 1e-10
 
 # PCA biplot
@@ -456,7 +456,9 @@ pca_plot<- draw_biplot(df_2_shorter,point_size=1)+
 ggplotly(pca_plot)
 ```
 
-Below, the data for 2000 and 2019 are compared to see if the causes of death in different regions have changed trends over the two decades. Notice that the distributions for Eur, Amr, and Emr remain relatively similar, and that Emr and Amr show the same changing trends, i.e., an increase in the share of deaths from noncommunicable diseases and a decrease in deaths from communicable. For Afr, Sear, and Wpr, despite the very unlike characterization of the causes of death for ta, they show the same trend of change from 2000 to 2019 (same direction of panning for all three points). They all had a decrease in the share of deaths due to communicable & nutritional, and an increase in the share of noncommunicable.
+Finally, we will analyze the similarity of the distribution of causes of death in different geographic areas, with Pricipal Component Analysis (PCA) method.
+
+Firstly, according to the data of 2019, Eur, Amr and Emr are more similar in the distribution of causes of death, with a lower number of deaths in all three major categories of causes.Wpr has more deaths due to noncommunicable diseases, Sear has more deaths due to injuries, and Afr has more deaths due to Communicable and nutritional diseases.
 
 ```{r}
 
@@ -486,10 +488,9 @@ df_2_long_filtered <- df_2_long_filtered %>%
 df_2_shorter <- df_2_long_filtered %>%
   pivot_wider(names_from = cause,values_from = death_num, values_fill=0)
 
-# 假设 df 是你的数据框
 constant_columns <- sapply(df_2_shorter, function(col) length(unique(col)) == 1)
 df_2_shorter <- df_2_shorter[, !constant_columns]
-# 用一个小的非零值替换零值
+# Replace 0 with a very small number
 df_2_shorter[df_2_shorter == 0] <- 1e-10
 
 # PCA biplot
@@ -501,3 +502,5 @@ pca_plot<- draw_biplot(df_2_shorter,point_size=1)+
 
 ggplotly(pca_plot)
 ```
+
+Above, the data for 2000 and 2019 are compared to see if the causes of death in different regions have changing trends over the two decades. Notice that the distributions for Eur, Amr, and Emr remain relatively similar, and that Emr and Amr show the same changing trends, i.e., an increase in the share of deaths from noncommunicable diseases and a decrease in deaths from communicable. For Afr, Sear and Wpr, despite the very different characteristics of the causes of death, they show the same trend of change from 2000 to 2019 (same direction of movement for all three points). They all had a decrease in the share of deaths due to communicable & nutritional reasons, and an increase in the share of noncommunicable diseases.
