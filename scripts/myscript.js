@@ -6,7 +6,6 @@ d3.csv("https://raw.githubusercontent.com/AmeliaJiang129/deathrate/main/d3_clean
     d.AverageDeathRate = +d.AverageDeathRate;
   });
 
-
   var margin = {top: 50, right: 180, bottom: 50, left: 60};
   var width = 800 - margin.left - margin.right;
   var height = 400 - margin.top - margin.bottom;
@@ -46,8 +45,8 @@ d3.csv("https://raw.githubusercontent.com/AmeliaJiang129/deathrate/main/d3_clean
       .attr("y", d => y(d.AverageDeathRate))
       .attr("height", d => height - y(d.AverageDeathRate))
       .attr("fill", d => color(d.Location))
-      .on("mouseover", handleMouseOver)
-      .on("mouseout", handleMouseOut);
+      .on("mouseover", ShowData)
+      .on("mouseout", MouseOut);
 
   // Add X and Y axes
   svg.append("g")
@@ -77,7 +76,7 @@ d3.csv("https://raw.githubusercontent.com/AmeliaJiang129/deathrate/main/d3_clean
       .style("text-anchor", "start")  // Adjusted text anchor
       .text(function(d) { return d; });
 
-  // Chart title
+  // Set title
   svg.append("text")
       .attr("x", width / 2)
       .attr("y", 0 - (margin.top / 2))
@@ -85,8 +84,7 @@ d3.csv("https://raw.githubusercontent.com/AmeliaJiang129/deathrate/main/d3_clean
       .style("font-size", "16px")
       .text("Death Rate of Each Region Over Years");
 
-  // Create a tooltip using d3-tip
-  // Create a tooltip using d3-tip
+  // Initialize tooltip
   const tooltip = d3.select("body")
       .append("div")
       .style("position", "absolute")
@@ -94,7 +92,7 @@ d3.csv("https://raw.githubusercontent.com/AmeliaJiang129/deathrate/main/d3_clean
       .style("background-color", "white");
 
   // Event handler for mouseover
-  function handleMouseOver(event, d) {
+  function ShowData(event, d) {
       const currentYearData = data.filter(item => item.Year === d.Year && item.Location === d.Location);
       const previousYearData = data.filter(item => (item.Year === (d.Year - 5) || item.Year === (d.Year - 4)) && item.Location === d.Location);
 
@@ -105,7 +103,6 @@ d3.csv("https://raw.githubusercontent.com/AmeliaJiang129/deathrate/main/d3_clean
           ? ((currentYearDeathRate - previousYearDeathRate) / previousYearDeathRate) * 100
           : 0;
 
-
       tooltip.html(`<strong>Year:</strong> ${d.Year}<br>
                     <strong>Location:</strong> ${d.Location}<br>
                     <strong>AverageDeathRate:</strong> ${currentYearDeathRate.toFixed(4)}<br>
@@ -113,11 +110,8 @@ d3.csv("https://raw.githubusercontent.com/AmeliaJiang129/deathrate/main/d3_clean
           .style('visibility', 'visible');
   }
 
-
-
-
   // Event handler for mouseout
-  function handleMouseOut(d) {
+  function MouseOut(d) {
      tooltip.style('visibility','hidden');
   }
 
