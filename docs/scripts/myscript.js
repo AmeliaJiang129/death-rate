@@ -85,7 +85,7 @@ d3.csv("https://raw.githubusercontent.com/AmeliaJiang129/deathrate/main/d3_clean
       .text("Death Rate of Each Region Over Years");
 
   // Initialize tooltip
-  const tooltip = d3.select("body")
+  const tooltip = d3.select("div#plot")
       .append("div")
       .style("position", "absolute")
       .style("visibility", "hidden")

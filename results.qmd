@@ -4,19 +4,16 @@
 
 ```{r}
 library(ggplot2)
-library(ggridges)
 library(dplyr)
 library(forcats)
 library(scales)
 library(ggrepel)
 library(openintro)
 library(plotly)
-library(tidyverse)
-library(hexbin)
+#library(tidyverse)
 library(RColorBrewer)
 library(readxl)
 library(tidyr)
-library(dplyr)
 library(redav)
 library(vcd)
 library(colorspace)
@@ -239,7 +236,7 @@ df_2_long_1$cause <-factor(df_2_long_1$cause, levels = c("Injuries","Communicabl
 
 ggplot(df_2_long_1,aes(x = year, y = death_num, fill = cause)) +
   geom_bar(stat = "identity") +
-  scale_fill_brewer(palette="Paired") +
+  scale_fill_brewer(palette="Set2") +
   labs(title = "Global Deaths Continue to Rise, with a Rising Share of Noncommunicable Factors",
        x = "Year",
        y = "Death Num") +
@@ -259,7 +256,7 @@ df_2_long_1$cause <-factor(df_2_long_1$cause, levels = c("Injuries","Communicabl
 
 ggplot(df_2_long_1,aes(x = year, y = death_num, fill = cause)) +
   geom_bar(stat = "identity") +
-  scale_fill_brewer(palette="Paired") +
+  scale_fill_brewer(palette="Set2") +
   labs(title = "Trends in Death Number Vary by Region, with Different Main Causes",
        x = "Year",
        y = "Death Num") +
@@ -283,7 +280,7 @@ df_2_long_1$cause <-factor(df_2_long_1$cause, levels = c("Injuries","Communicabl
 
 ggplot(df_2_long_1,aes(x = year, y = death_num, fill = cause)) +
   geom_bar(stat = "identity") +
-  scale_fill_brewer(palette="Paired") +
+  scale_fill_brewer(palette="Set2") +
   labs(title = "Trends in Death Number Faceted on Sex",
        x = "Year",
        y = "Death Num") +

@@ -79,7 +79,7 @@ library(ggplot2)
 
 
 ```{r}
-data <- read.csv('dataset1.csv')
+data <- read.csv('data/clean/dataset1.csv')
 
 #Dimension
 print("Dimension of data")
@@ -153,7 +153,7 @@ library(tidyr)
 library(dplyr)
 library(ggplot2)
 
-df2 <- read_excel("ghecode2019.xlsx", sheet = "Summary",col_names = TRUE)
+df2 <- read_excel("data/clean/ghecode2019.xlsx", sheet = "Summary",col_names = TRUE)
 
 df_long <- pivot_longer(df2,cols = Global:WPR, names_to = "region", values_to = "death_num")
 
@@ -177,7 +177,7 @@ ggplot(filtered_data, aes(x = if_zero)) +
 Note that in this figure, although we used stat = "count" in the bar plot, we adjusted the scale of the y-axis to be free, to clearly compare zero and non-zero proportions. And it's clear that as our we move deeper into the level hierarchy, the proportion of non-zeros is showing an increasing trend.
 
 ```{r}
-file_path <- "ghecode2019_1.xlsx"
+file_path <- "data/clean/ghecode2019_1.xlsx"
 df_2019 <- data.frame()
 for (sheet_name in excel_sheets(file_path)) {
   current_sheet <- read_excel(file_path, sheet = sheet_name)
@@ -205,9 +205,8 @@ In the first graph above, we plotted grouped bars according to different regions
 ggplot(df_2019_long, aes(x = region, y = death_num, fill = age_group)) +
   geom_bar(stat = "identity",position = "dodge") +
   facet_grid(. ~ sex) +
-
+  #scale_fill_brewer(palette="Set2") +
   labs(title = "Death Count in Different Age, Sex and Regions for 2019",
-
        x = "Region",
        y = "Death Count",
        fill = "Age Group")+
