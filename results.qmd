@@ -5,7 +5,7 @@
 ```{r}
 library(ggplot2)
 library(ggridges)
-library(dbplyr)
+#library(dbplyr)
 library(dplyr)
 library(forcats)
 library(scales)
@@ -22,7 +22,7 @@ library(RColorBrewer)
 First we will look at the general trend of death rate and life expectancy over time, globally and regionally, then compare between regions.
 
 ```{r}
-data <- read.csv('dataset1.csv')
+data <- read.csv('data/clean/dataset1.csv')
 
 data <- data[data$Indicator %in% c('nMx - age-specific death rate between ages x and x+n','ex - expectation of life at age x'), ]
 data <- data[ , c('Indicator', 'Location', 'Period', 'Dim1', 'Dim2', 'FactValueNumeric')]
@@ -203,12 +203,13 @@ Overall, death rate is closely related to the establishment of the health care s
 ## Data Source 2:
 
 ```{r,fig.height=5.5,fig.width=8}
+
 library(readxl)
 library(tidyr)
 library(dplyr)
 library(ggplot2)
 library(dplyr)
-library(redav)
+#library(redav)
 library(plotly)
 library(vcd)
 library(colorspace)
@@ -229,7 +230,6 @@ df_2$cause[df_2$cause == 'Noncommunicable diseases'] <- 'Noncommunicable'
 df_2_long <- pivot_longer(df_2,cols = '0-28 days':'70+ years', names_to = "age_group", values_to = "death_num")
 df_2_long$age_group <- factor(df_2_long$age_group, levels = c("0-28 days", "1-59 months", "5-14 years", "15-29 years", "30-49 years", "50-59 years", "60-69 years","70+ years"))
 df_2_long$sex <-factor(df_2_long$sex, levels = c("Male","Female"))
-
 ```
 
 First, we analyze the change over time in the number of deaths of different causes on a global scale. It is noted that there is an upward trend in the number of deaths globally as a whole. In particular, deaths from non-communicable diseases are the main source of the rise in the number of deaths from all factors, while deaths from communicable diseases and problems such as malnutrition show a downward trend. The overall number of casualties is relatively stable and hardly changes over time.
@@ -271,9 +271,7 @@ ggplot(df_2_long_1,aes(x = year, y = death_num, fill = cause)) +
 
 ```
 
-
 By gender, the overall number of deaths is higher for males than for females, and both show an upward trend over time. It is noted that for both gender groups, the number of deaths from noncommunicable disease is increasing, and the number of deaths from both communicable and nutritional causes is decreasing. It is also noteworthy that there are significantly more deaths from injuries and noncommunicable disease among males than females.
-
 
 ```{r,fig.height=8,fig.width=8}
 
@@ -294,11 +292,9 @@ ggplot(df_2_long_1,aes(x = year, y = death_num, fill = cause)) +
 
 ```
 
-
 The following analysis of the 2019 data analyzes whether there is an interaction relationship between the number of deaths in different regions, ages, and sexes.
 
 First note that the age composition of deaths is characterized differently across region. Afr and Emr have more young people in their death cohorts. Especially for Afr, the number of deaths under 15 accounts for almost half of the overall number of deaths, which may be related to the health care conditions in the region. For Amr, Wpr and Eur, on the other hand, the age group over 69 accounted for the majority of the overall number of deaths.
-
 
 ```{r}
 
@@ -337,9 +333,7 @@ mosaic(age_group2 ~ cause,
 
 ```
 
-
 The gender distribution is almost even across age and regional divisions.
-
 
 ```{r}
 mosaic(sex~age_group2,data=df_2_long_2019,highlighting_fill=c("#A7C6DD","#6B0077"),direction=c('v','h','h'))
@@ -347,7 +341,7 @@ mosaic(sex~region,data=df_2_long_2019,highlighting_fill=c("#A7C6DD","#6B0077"),d
 
 ```
 
-Below, we analyze the causes of death more specifically. In the above analysis, we simply categorized the causes of death into three main categories-communicable & nutritional, noncommunicable, and injuries-and now we will break them down more closely to find the major causes of death in each category. 
+Below, we analyze the causes of death more specifically. In the above analysis, we simply categorized the causes of death into three main categories-communicable & nutritional, noncommunicable, and injuries-and now we will break them down more closely to find the major causes of death in each category.
 
 Among noncommunicable diseases, Cardiovascular diseases, Malignant neoplasms and Respiratory diseases are the top 3 causes for death. Among communicable & nutritional reasons, Infectious diseases are the top 3 causes for death. Among communicable & nutritional reasons, Infectious and parasitic diseases, Neonatal conditions and Respiratory Infectious are the top 3 causes for death. For injuries, unintentional diseases are the top 3 causes. For injuries, unintentional injuries and deaths account for a higher proportion of deaths and injuries than intentional injuries and deaths.
 
@@ -507,4 +501,3 @@ pca_plot<- draw_biplot(df_2_shorter,point_size=1)+
 
 ggplotly(pca_plot)
 ```
-
